@@ -1,59 +1,87 @@
 package AST;
 
-import TEMP.*;
+import TYPES.TYPE;
+import TYPES.TYPE_LIST;
+import TYPES.TYPE_VOID;
 
-public class AST_EXP_LIST extends AST_Node
-{
-	/****************/
-	/* DATA MEMBERS */
-	/****************/
-	public AST_EXP head;
-	public AST_EXP_LIST tail;
+public class AST_EXP_LIST extends AST_Node {
 
-	/******************/
-	/* CONSTRUCTOR(S) */
-	/******************/
-	public AST_EXP_LIST(AST_EXP head,AST_EXP_LIST tail)
-	{
-		/******************************/
-		/* SET A UNIQUE SERIAL NUMBER */
-		/******************************/
-		SerialNumber = AST_Node_Serial_Number.getFresh();
+    public AST_EXP exp;
+    public AST_EXP_LIST arguments;
 
-		this.head = head;
-		this.tail = tail;
-	}
-	public TEMP IRme()
-	{
-		return head.IRme();
-	}
-	/******************************************************/
-	/* The printing message for a statement list AST node */
-	/******************************************************/
-	public void PrintMe()
-	{
-		/********************************/
-		/* AST NODE TYPE = AST EXP LIST */
-		/********************************/
-		System.out.print("AST NODE EXP LIST\n");
+    /******************/
+    /* CONSTRUCTOR(S) */
+    /******************/
+    public AST_EXP_LIST(AST_EXP exp, AST_EXP_LIST arguments, int line) {
+        
+        super(line);
+        /******************************/
+        /* SET A UNIQUE SERIAL NUMBER */
+        /******************************/
+        SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		/*************************************/
-		/* RECURSIVELY PRINT HEAD + TAIL ... */
-		/*************************************/
-		if (head != null) head.PrintMe();
-		if (tail != null) tail.PrintMe();
+        /***************************************/
+        /* PRINT CORRESPONDING DERIVATION RULE */
+        /***************************************/
+        if(arguments != null) System.out.println("====================== expList -> exp COMMA expList");
+        else System.out.println("====================== expList -> exp");
+        /*******************************/
+        /* COPY INPUT DATA MEMBERS ... */
+        /*******************************/
+        this.exp = exp;
+        this.arguments = arguments;
+    }
 
-		/**********************************/
-		/* PRINT to AST GRAPHVIZ DOT file */
-		/**********************************/
-		AST_GRAPHVIZ.getInstance().logNode(
-			SerialNumber,
-			"EXP\nLIST\n");
-		
-		/****************************************/
-		/* PRINT Edges to AST GRAPHVIZ DOT file */
-		/****************************************/
-		if (head != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,head.SerialNumber);
-		if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
-	}
+    /***************************************************/
+    /* The printing message for an expression argument AST node */
+    /***************************************************/
+    public void PrintMe()
+    {
+        /*********************************/
+        /* AST NODE TYPE = EXPRESSION ARGUMENT */
+        /*********************************/
+        System.out.println("AST NODE EXPRESSION ARGUMENT");
+
+        /******************************************/
+        /* RECURSIVELY PRINT exp and expArgs */
+        /******************************************/
+        if (exp != null) exp.PrintMe();
+        if (arguments != null) arguments.PrintMe();
+
+        /***************************************/
+        /* PRINT Node to AST GRAPHVIZ DOT file */
+        /***************************************/
+        AST_GRAPHVIZ.getInstance().logNode(
+            SerialNumber,
+            "EXPRESSION ARGUMENT");
+
+        /****************************************/
+        /* PRINT Edges to AST GRAPHVIZ DOT file */
+        /****************************************/
+        if (exp != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, exp.SerialNumber);
+        if (arguments != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, arguments.SerialNumber);
+    }
+
+    public TYPE_LIST SemantMe() {
+        /***************************************/
+        /* [1] Semantically analyze exp type */
+        /***************************************/
+        TYPE exp_t = exp.SemantMe();
+        
+        /***********************/
+        /* [2] check void type */
+        /***********************/
+        if (exp_t instanceof TYPE_VOID) {
+            System.out.format(">> ERROR: [%d] void type for variable is illegal\n",line);
+            print_error_and_exit();
+        }
+
+        /***********************************************************/
+        /* [3] Semantically analyze remaining exps (recursively) */
+        /***********************************************************/
+        TYPE_LIST tail;
+        if (arguments == null) {tail = null;}
+		else {tail = arguments.SemantMe();}
+        return new TYPE_LIST(exp_t, tail);
+    }
 }

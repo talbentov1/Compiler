@@ -1,6 +1,7 @@
 package AST;
 
-import TYPES.*;
+import TYPES.TYPE;
+import TYPES.TYPE_STRING;
 
 public class AST_EXP_STRING extends AST_EXP
 {
@@ -9,20 +10,28 @@ public class AST_EXP_STRING extends AST_EXP
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_STRING(String value)
+	public AST_EXP_STRING(String value, int line)
 	{
+		super(line);
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		System.out.format("====================== exp -> STRING( %s )\n", value);
-		this.value = value;
+		/***************************************/
+		/* PRINT CORRESPONDING DERIVATION RULE */
+		/***************************************/
+		System.out.format("====================== exp -> String( %s )\n", value.substring(1, value.length() - 1)); // remove quotes
+
+		/*******************************/
+		/* COPY INPUT DATA NENBERS ... */
+		/*******************************/
+		this.value = value.substring(1, value.length() - 1); // remove quotes
 	}
 
-	/******************************************************/
+	/************************************************/
 	/* The printing message for a STRING EXP AST node */
-	/******************************************************/
+	/************************************************/
 	public void PrintMe()
 	{
 		/*******************************/
@@ -30,15 +39,25 @@ public class AST_EXP_STRING extends AST_EXP
 		/*******************************/
 		System.out.format("AST NODE STRING( %s )\n",value);
 
-		/***************************************/
-		/* PRINT Node to AST GRAPHVIZ DOT file */
-		/***************************************/
+		/******************************************/
+        /* PRINT value ... */
+        /******************************************/
+        System.out.format("STRING VALUE( %s )\n", value);
+
+		/*********************************/
+		/* Print to AST GRAPHIZ DOT file */
+		/*********************************/
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
-			String.format("STRING\n%s",value.replace('"','\'')));
+			String.format("STRING(%s)",value));
 	}
+
 	public TYPE SemantMe()
 	{
 		return TYPE_STRING.getInstance();
+	}
+
+	public boolean isExpConst() {
+		return true;
 	}
 }

@@ -1,7 +1,6 @@
 package AST;
-
 import TYPES.*;
-import TEMP.*;
+import SYMBOL_TABLE.*;
 
 public class AST_STMT_LIST extends AST_Node
 {
@@ -14,8 +13,9 @@ public class AST_STMT_LIST extends AST_Node
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_STMT_LIST(AST_STMT head,AST_STMT_LIST tail)
+	public AST_STMT_LIST(AST_STMT head,AST_STMT_LIST tail, int line)
 	{
+		super(line);
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
@@ -64,19 +64,9 @@ public class AST_STMT_LIST extends AST_Node
 		if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
 	}
 	
-	public TEMP IRme()
-	{
-		if (head != null) head.IRme();
-		if (tail != null) tail.IRme();
-		
+	public TYPE SemantMe() {
+        if (head != null) head.SemantMe();
+        if (tail != null) tail.SemantMe();
 		return null;
-	}
-	
-	public TYPE SemantMe()
-	{
-		if (head != null) head.SemantMe();
-		if (tail != null) tail.SemantMe();
-		
-		return null;
-	}
+    }
 }

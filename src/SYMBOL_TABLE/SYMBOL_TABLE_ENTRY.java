@@ -28,6 +28,9 @@ public class SYMBOL_TABLE_ENTRY
 	/******************/
 	public TYPE type;
 
+	public boolean isClassDec;
+	public int scope;
+
 	/*********************************************/
 	/* prevtop and next symbol table entries ... */
 	/*********************************************/
@@ -48,7 +51,10 @@ public class SYMBOL_TABLE_ENTRY
 		int index,
 		SYMBOL_TABLE_ENTRY next,
 		SYMBOL_TABLE_ENTRY prevtop,
-		int prevtop_index)
+		int prevtop_index,
+		int scope,
+		boolean isClassDec
+		)
 	{
 		this.index = index;
 		this.name = name;
@@ -56,5 +62,7 @@ public class SYMBOL_TABLE_ENTRY
 		this.next = next;
 		this.prevtop = prevtop;
 		this.prevtop_index = prevtop_index;
+		this.scope = scope;
+		this.isClassDec = isClassDec;
 	}
 }

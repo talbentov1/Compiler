@@ -1,11 +1,13 @@
 package AST;
+import TYPES.TYPE;
 
-import TYPES.*;
 
 public abstract class AST_DEC extends AST_Node
 {
-	public TYPE SemantMe()
-	{
-		return null;
-	}
+    public AST_DEC(int line){
+        super(line);
+    }
+    public TYPE SemantMe() {
+        return null;
+    }
 }

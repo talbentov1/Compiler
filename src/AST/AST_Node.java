@@ -1,6 +1,6 @@
 package AST;
 
-import TEMP.*;
+import java.io.PrintWriter;
 
 public abstract class AST_Node
 {
@@ -10,6 +10,18 @@ public abstract class AST_Node
 	/* a graphviz dot format of the AST ...    */
 	/*******************************************/
 	public int SerialNumber;
+	public static PrintWriter fileWriter;
+	public int line;
+
+	public AST_Node(int line){
+		this.line = line;
+	}
+
+	public void print_error_and_exit(){
+		fileWriter.write("ERROR("+line+")\n");
+		fileWriter.close();
+		System.exit(0);
+	}
 	
 	/***********************************************/
 	/* The default message for an unknown AST node */
@@ -17,13 +29,5 @@ public abstract class AST_Node
 	public void PrintMe()
 	{
 		System.out.print("AST NODE UNKNOWN\n");
-	}
-
-	/*****************************************/
-	/* The default IR action for an AST node */
-	/*****************************************/
-	public TEMP IRme()
-	{
-		return null;
 	}
 }

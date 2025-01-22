@@ -1,5 +1,4 @@
 package AST;
-
 import TYPES.*;
 import SYMBOL_TABLE.*;
 
@@ -11,75 +10,78 @@ public class AST_STMT_IF extends AST_STMT
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AST_STMT_IF(AST_EXP cond,AST_STMT_LIST body)
+	public AST_STMT_IF(AST_EXP cond,AST_STMT_LIST body, int line)
 	{
+        super(line);
 		/******************************/
-		/* SET A UNIQUE SERIAL NUMBER */
-		/******************************/
-		SerialNumber = AST_Node_Serial_Number.getFresh();
+        /* SET A UNIQUE SERIAL NUMBER */
+        /******************************/
+        SerialNumber = AST_Node_Serial_Number.getFresh();
 
+        /***************************************/
+        /* PRINT CORRESPONDING DERIVATION RULE */
+        /***************************************/
+        System.out.println("====================== stmt -> IF LPAREN exp RPAREN LBRACE stmtList RBRACE");
+		
+		/*******************************/
+        /* COPY INPUT DATA MEMBERS ... */
+        /*******************************/
 		this.cond = cond;
 		this.body = body;
 	}
 
-	/*************************************************/
-	/* The printing message for a binop exp AST node */
-	/*************************************************/
-	public void PrintMe()
-	{
-		/*************************************/
-		/* AST NODE TYPE = AST SUBSCRIPT VAR */
-		/*************************************/
-		System.out.print("AST NODE STMT IF\n");
+	/***************************************************/
+    /* The printing message for an if statement AST node */
+    /***************************************************/
+    public void PrintMe()
+    {
+        /*********************************/
+        /* AST NODE TYPE = IF STATEMENT */
+        /*********************************/
+        System.out.println("AST NODE IF");
 
-		/**************************************/
-		/* RECURSIVELY PRINT left + right ... */
-		/**************************************/
-		if (cond != null) cond.PrintMe();
-		if (body != null) body.PrintMe();
+        /******************************************/
+        /* RECURSIVELY PRINT cond and body ... */
+        /******************************************/
+        if (cond != null) cond.PrintMe();
+        if (body != null) body.PrintMe();
 
-		/***************************************/
-		/* PRINT Node to AST GRAPHVIZ DOT file */
-		/***************************************/
-		AST_GRAPHVIZ.getInstance().logNode(
-			SerialNumber,
-			"IF (left)\nTHEN right");
-		
-		/****************************************/
-		/* PRINT Edges to AST GRAPHVIZ DOT file */
-		/****************************************/
-		if (cond != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,cond.SerialNumber);
-		if (body != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,body.SerialNumber);
-	}
+        /***************************************/
+        /* PRINT Node to AST GRAPHVIZ DOT file */
+        /***************************************/
+        AST_GRAPHVIZ.getInstance().logNode(
+            SerialNumber,
+            "IF");
 
-	public TYPE SemantMe()
-	{
-		/****************************/
-		/* [0] Semant the Condition */
-		/****************************/
-		if (cond.SemantMe() != TYPE_INT.getInstance())
-		{
-			System.out.format(">> ERROR [%d:%d] condition inside IF is not integral\n",2,2);
-		}
-		
-		/*************************/
-		/* [1] Begin Class Scope */
-		/*************************/
-		SYMBOL_TABLE.getInstance().beginScope();
+        /****************************************/
+        /* PRINT Edges to AST GRAPHVIZ DOT file */
+        /****************************************/
+        if (cond != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, cond.SerialNumber);
+        if (body != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, body.SerialNumber);
+    }
 
-		/***************************/
-		/* [2] Semant Data Members */
-		/***************************/
-		body.SemantMe();
+    public TYPE SemantMe() {
+        if(cond == null){
+            System.out.println(">> ERROR: Condition expression missing in if statement");
+            print_error_and_exit();
+            return null;
+        }
+        TYPE condType = cond.SemantMe();
 
-		/*****************/
-		/* [3] End Scope */
-		/*****************/
-		SYMBOL_TABLE.getInstance().endScope();
+        if (!(condType instanceof TYPE_INT)) {
+            System.out.format(">> ERROR [%d] condition inside while loop must be of type int\n", line);
+            print_error_and_exit();
+        }
+    
+        SYMBOL_TABLE.getInstance().beginScope();
 
-		/*********************************************************/
-		/* [4] Return value is irrelevant for class declarations */
-		/*********************************************************/
-		return null;		
-	}	
+        if(body != null) {
+
+            body.SemantMe();
+        }
+
+        SYMBOL_TABLE.getInstance().endScope();
+    
+        return null;
+    }
 }

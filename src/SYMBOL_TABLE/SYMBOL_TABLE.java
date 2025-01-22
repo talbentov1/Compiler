@@ -26,6 +26,9 @@ public class SYMBOL_TABLE
 	private SYMBOL_TABLE_ENTRY[] table = new SYMBOL_TABLE_ENTRY[hashArraySize];
 	private SYMBOL_TABLE_ENTRY top;
 	private int top_index = 0;
+	private TYPE_CLASS currentClass = null;
+	private int scope = 0; // 0 is the global scope
+	private TYPE_FUNCTION currFunction = null;
 	
 	/**************************************************************/
 	/* A very primitive hash function for exposition purposes ... */
@@ -46,7 +49,7 @@ public class SYMBOL_TABLE
 	/****************************************************************************/
 	/* Enter a variable, function, class type or array type to the symbol table */
 	/****************************************************************************/
-	public void enter(String name,TYPE t)
+	public void enter(String name,TYPE t, boolean isClassDec)
 	{
 		/*************************************************/
 		/* [1] Compute the hash value for this new entry */
@@ -62,7 +65,7 @@ public class SYMBOL_TABLE
 		/**************************************************************************/
 		/* [3] Prepare a new symbol table entry with name, type, next and prevtop */
 		/**************************************************************************/
-		SYMBOL_TABLE_ENTRY e = new SYMBOL_TABLE_ENTRY(name,t,hashValue,next,top,top_index++);
+		SYMBOL_TABLE_ENTRY e = new SYMBOL_TABLE_ENTRY(name,t,hashValue,next,top,top_index++,scope,isClassDec);
 
 		/**********************************************/
 		/* [4] Update the top of the symbol table ... */
@@ -98,6 +101,74 @@ public class SYMBOL_TABLE
 		return null;
 	}
 
+	/******************************************************/
+	/* Find a symbol in the innermost (last) scope only   */
+	/******************************************************/
+	public TYPE findInLastScope(String name) {
+    	SYMBOL_TABLE_ENTRY current = top;
+
+   		while (current != null && !current.name.equals("SCOPE-BOUNDARY")) {
+			if (current.name.equals(name)) {
+            		return current.type;
+        		}
+        	current = current.prevtop;
+    		}
+    	return null;
+	}
+
+	public TYPE findInScopeDownTo(String name, int minimalScope) {
+		SYMBOL_TABLE_ENTRY e;
+		for (e = top; e != null; e = e.prevtop) {
+			if (name.equals(e.name) && e.scope >= minimalScope) {return e.type;}
+		}
+		return null;
+	}
+
+	public boolean isTypeAClassDec(TYPE type) {
+    	SYMBOL_TABLE_ENTRY e = top;
+
+		while (e != null) {
+        	if (e.type == type && !e.isClassDec && e.name.equals(type.name)) {
+            	return false;
+        	}
+        	e = e.prevtop;
+    	}
+
+    	return true;
+	}
+
+	public TYPE findClassDec(String name) {
+		SYMBOL_TABLE_ENTRY e;
+	
+		for (e = top; e != null; e = e.prevtop) {
+			if (name.equals(e.name) && (e.type instanceof TYPE_CLASS) && e.isClassDec) {
+				return e.type;
+			}
+		}
+
+		return null;
+	}
+
+	public void setCurrentClass(TYPE_CLASS currentClass)
+	{
+		this.currentClass = currentClass;
+	}
+
+	public TYPE_CLASS getCurrentClass()
+	{
+		return this.currentClass;
+	}
+
+	public void setCurrentFunction(TYPE_FUNCTION func) 
+	{
+		currFunction = func;
+	}
+
+	public TYPE_FUNCTION getCurrentFunction() 
+	{
+		return currFunction;
+	}
+
 	/***************************************************************************/
 	/* begine scope = Enter the <SCOPE-BOUNDARY> element to the data structure */
 	/***************************************************************************/
@@ -111,8 +182,10 @@ public class SYMBOL_TABLE
 		/************************************************************************/
 		enter(
 			"SCOPE-BOUNDARY",
-			new TYPE_FOR_SCOPE_BOUNDARIES("NONE"));
-
+			new TYPE_FOR_SCOPE_BOUNDARIES("NONE"),
+			false);
+		scope++;
+		
 		/*********************************************/
 		/* Print the symbol table after every change */
 		/*********************************************/
@@ -141,12 +214,18 @@ public class SYMBOL_TABLE
 		top_index = top_index-1;
 		top = top.prevtop;
 
+		scope--;
+
 		/*********************************************/
 		/* Print the symbol table after every change */		
 		/*********************************************/
 		PrintMe();
 	}
 	
+	public int getScope(){
+		return scope;
+	}
+
 	public static int n=0;
 	
 	public void PrintMe()
@@ -250,12 +329,14 @@ public class SYMBOL_TABLE
 			/*****************************************/
 			/* [1] Enter primitive types int, string */
 			/*****************************************/
-			instance.enter("int",   TYPE_INT.getInstance());
-			instance.enter("string",TYPE_STRING.getInstance());
+			instance.enter("int",   TYPE_INT.getInstance(), false);
+			instance.enter("string",TYPE_STRING.getInstance(), false);
 
 			/*************************************/
 			/* [2] How should we handle void ??? */
 			/*************************************/
+			
+			//nothing 
 
 			/***************************************/
 			/* [3] Enter library function PrintInt */
@@ -267,7 +348,21 @@ public class SYMBOL_TABLE
 					"PrintInt",
 					new TYPE_LIST(
 						TYPE_INT.getInstance(),
-						null)));
+						null)),
+						false);
+
+			/***************************************/
+			/* [3] Enter library function PrintString */
+			/***************************************/
+			instance.enter(
+				"PrintString",
+				new TYPE_FUNCTION(
+					TYPE_VOID.getInstance(),
+					"PrintString",
+					new TYPE_LIST(
+						TYPE_STRING.getInstance(),
+						null)),
+						false);
 			
 		}
 		return instance;
