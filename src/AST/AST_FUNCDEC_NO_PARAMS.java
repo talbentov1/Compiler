@@ -142,7 +142,7 @@ public class AST_FUNCDEC_NO_PARAMS extends AST_FUNCDEC_TYPE
         /*  Enter the function type to the symbol table */
         /***************************************/
         
-        SYMBOL_TABLE.getInstance().enter(name, func, false);
+        SYMBOL_TABLE.getInstance().enter(name, func, false, 0);
 
         /***************************************/
         /*  Semant the function body */

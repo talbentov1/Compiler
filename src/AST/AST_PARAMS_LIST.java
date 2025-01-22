@@ -68,7 +68,12 @@ public class AST_PARAMS_LIST extends AST_Node {
         if (paramsList != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, paramsList.SerialNumber);
     }
 
+
     public TYPE_LIST SemantMe() {
+        return SemantMe(8); // Start with offset 8 for first function parameter
+    }
+
+    public TYPE_LIST SemantMe(int currentOffset) {
         /***************************************************/
         /* [1] Semantically analyze the type of the argument */
         /***************************************************/
@@ -94,14 +99,14 @@ public class AST_PARAMS_LIST extends AST_Node {
         /*******************************************/
         /* [2] enter current param to symbol table */
         /*******************************************/
-        SYMBOL_TABLE.getInstance().enter(name, param_t, false); // begin and end scope circiling the parameter are inserted in AST_FUNC_PARAMS
+        SYMBOL_TABLE.getInstance().enter(name, param_t, false, currentOffset); // begin and end scope circiling the parameter are inserted in AST_FUNC_PARAMS
     
         /***********************************************************/
         /* [3] Semantically analyze remaining params (recursively) */
         /***********************************************************/
         TYPE_LIST tail;
         if (paramsList == null) {tail = null;}
-		else {tail = paramsList.SemantMe();}
+		else {tail = paramsList.SemantMe(currentOffset + 4);} // 4 bytes for each parameter
         return new TYPE_LIST(param_t, tail);
     }
 }

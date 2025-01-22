@@ -160,7 +160,7 @@ public class AST_FUNCDEC_PARAMS extends AST_FUNCDEC_TYPE
         /********************************************************************************************/
         f = new TYPE_FUNCTION(returnType,name,f_params);
         SYMBOL_TABLE.getInstance().setCurrentFunction(f);
-        SYMBOL_TABLE.getInstance().enter(name, f, false);
+        SYMBOL_TABLE.getInstance().enter(name, f, false, 0);
 
         /***************************************/
         /*  Semant the function body */
@@ -176,7 +176,7 @@ public class AST_FUNCDEC_PARAMS extends AST_FUNCDEC_TYPE
         /***************************************************/
 		/*  Enter the Function Type to the Symbol Table */
 		/***************************************************/
-		SYMBOL_TABLE.getInstance().enter(name, f, false);
+		SYMBOL_TABLE.getInstance().enter(name, f, false, 0);
 
         /***************************************/
         /*  Return the function type */
