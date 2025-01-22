@@ -49,7 +49,7 @@ public class SYMBOL_TABLE
 	/****************************************************************************/
 	/* Enter a variable, function, class type or array type to the symbol table */
 	/****************************************************************************/
-	public void enter(String name,TYPE t, boolean isClassDec)
+	public void enter(String name,TYPE t, boolean isClassDec, int offset)
 	{
 		/*************************************************/
 		/* [1] Compute the hash value for this new entry */
@@ -65,7 +65,7 @@ public class SYMBOL_TABLE
 		/**************************************************************************/
 		/* [3] Prepare a new symbol table entry with name, type, next and prevtop */
 		/**************************************************************************/
-		SYMBOL_TABLE_ENTRY e = new SYMBOL_TABLE_ENTRY(name,t,hashValue,next,top,top_index++,scope,isClassDec);
+		SYMBOL_TABLE_ENTRY e = new SYMBOL_TABLE_ENTRY(name,t,hashValue,next,top,top_index++,scope,isClassDec, offset);
 
 		/**********************************************/
 		/* [4] Update the top of the symbol table ... */
@@ -183,7 +183,8 @@ public class SYMBOL_TABLE
 		enter(
 			"SCOPE-BOUNDARY",
 			new TYPE_FOR_SCOPE_BOUNDARIES("NONE"),
-			false);
+			false,
+			0);
 		scope++;
 		
 		/*********************************************/
@@ -275,9 +276,10 @@ public class SYMBOL_TABLE
 					/* [4b] Print entry(i,it) node */
 					/*******************************/
 					fileWriter.format("node_%d_%d ",i,j);
-					fileWriter.format("[label=\"<f0>%s|<f1>%s|<f2>prevtop=%d|<f3>next\"];\n",
+					fileWriter.format("[label=\"<f0>%s|<f1>%s|<f2>prevtop=%d|<f3>offset=%d|<f4>next\"];\n",
 						it.name,
 						it.type.name,
+						it.offset,
 						it.prevtop_index);
 
 					if (it.next != null)
@@ -289,7 +291,7 @@ public class SYMBOL_TABLE
 							"node_%d_%d -> node_%d_%d [style=invis,weight=10];\n",
 							i,j,i,j+1);
 						fileWriter.format(
-							"node_%d_%d:f3 -> node_%d_%d:f0;\n",
+							"node_%d_%d:f4 -> node_%d_%d:f0;\n",
 							i,j,i,j+1);
 					}
 					j++;
@@ -329,8 +331,8 @@ public class SYMBOL_TABLE
 			/*****************************************/
 			/* [1] Enter primitive types int, string */
 			/*****************************************/
-			instance.enter("int",   TYPE_INT.getInstance(), false);
-			instance.enter("string",TYPE_STRING.getInstance(), false);
+			instance.enter("int",   TYPE_INT.getInstance(), false, 0);
+			instance.enter("string",TYPE_STRING.getInstance(), false, 0);
 
 			/*************************************/
 			/* [2] How should we handle void ??? */
@@ -349,7 +351,8 @@ public class SYMBOL_TABLE
 					new TYPE_LIST(
 						TYPE_INT.getInstance(),
 						null)),
-						false);
+						false,
+						0);
 
 			/***************************************/
 			/* [3] Enter library function PrintString */
@@ -362,7 +365,8 @@ public class SYMBOL_TABLE
 					new TYPE_LIST(
 						TYPE_STRING.getInstance(),
 						null)),
-						false);
+						false,
+						0);
 			
 		}
 		return instance;

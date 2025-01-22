@@ -30,6 +30,7 @@ public class SYMBOL_TABLE_ENTRY
 
 	public boolean isClassDec;
 	public int scope;
+	public int offset;
 
 	/*********************************************/
 	/* prevtop and next symbol table entries ... */
@@ -53,7 +54,8 @@ public class SYMBOL_TABLE_ENTRY
 		SYMBOL_TABLE_ENTRY prevtop,
 		int prevtop_index,
 		int scope,
-		boolean isClassDec
+		boolean isClassDec,
+		int offset
 		)
 	{
 		this.index = index;
@@ -64,5 +66,6 @@ public class SYMBOL_TABLE_ENTRY
 		this.prevtop_index = prevtop_index;
 		this.scope = scope;
 		this.isClassDec = isClassDec;
+		this.offset = offset;
 	}
 }
