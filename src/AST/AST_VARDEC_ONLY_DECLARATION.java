@@ -84,15 +84,20 @@ public class AST_VARDEC_ONLY_DECLARATION extends AST_VARDEC_TYPE
             print_error_and_exit();				
 		}
 
+        int offset;
+
         TYPE_CLASS currClass = SYMBOL_TABLE.getInstance().getCurrentClass();
         if ( currClass != null && SYMBOL_TABLE.getInstance().getScope() == 1){
             if(currClass.findDataMember(name) != null){
                 System.out.format(">> ERROR [%d] shadowing %s is illegal.\n", line, name);
                 print_error_and_exit();
             }
+            offset = SYMBOL_TABLE.getInstance().findNextAvailableOffsetInClass(currClass);
+        } else {
+            offset = SYMBOL_TABLE.getInstance().findNextAvailableOffset();
         }
 
-        SYMBOL_TABLE.getInstance().enter(name, t, false);
+        SYMBOL_TABLE.getInstance().enter(name, t, false, offset);
 
         return new TYPE_CLASS_VAR_DEC(t, name);
     }
