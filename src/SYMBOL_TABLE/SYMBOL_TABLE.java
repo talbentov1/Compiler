@@ -116,6 +116,34 @@ public class SYMBOL_TABLE
     	return null;
 	}
 
+	public int findNextAvailableOffset() {
+		// global variable
+		if (this.scope == 0) {
+			return 0;
+		}
+		
+		SYMBOL_TABLE_ENTRY current = top;
+		int offset = 0;
+   		while (current != null && !current.name.equals("SCOPE-BOUNDARY")) {
+			if(current.offset != null && current.offset < 0) {
+				offset = current.offset;
+			}
+		}
+		return offset - 4;
+	}
+
+	public int findNextAvailableOffsetInClass () {
+		SYMBOL_TABLE_ENTRY current = top;
+		int offset = 0;
+   		while (current != null && !current.name.equals("SCOPE-BOUNDARY")) {
+			if(current.offset != null && current.offset < 0) {
+				offset = current.offset;
+			}
+		}
+		return offset + 4;
+	}
+
+
 	public TYPE findInScopeDownTo(String name, int minimalScope) {
 		SYMBOL_TABLE_ENTRY e;
 		for (e = top; e != null; e = e.prevtop) {
