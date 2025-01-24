@@ -1,5 +1,6 @@
 package AST;
 
+import TEMP.TEMP;
 import TYPES.TYPE;
 import TYPES.TYPE_LIST;
 import TYPES.TYPE_VOID;
@@ -83,5 +84,12 @@ public class AST_EXP_LIST extends AST_Node {
         if (arguments == null) {tail = null;}
 		else {tail = arguments.SemantMe();}
         return new TYPE_LIST(exp_t, tail);
+    }
+
+    public TEMP IRme()
+    {
+        if (exp != null) {exp.IRme();}
+        if (arguments != null) {arguments.IRme();}
+        return null;
     }
 }

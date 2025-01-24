@@ -1,5 +1,8 @@
 package AST;
 
+import IR.IR;
+import IR.IRcommand_PrintInt;
+import TEMP.TEMP;
 import TYPES.TYPE;
 
 public class AST_EXP_FUNC_CALL extends AST_EXP
@@ -20,7 +23,8 @@ public class AST_EXP_FUNC_CALL extends AST_EXP
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== exp ->  (var DOT)? ID LPAREN (exp (COMMA exp)*)? RPAREN\n");
+		//System.out.print("====================== exp ->  (var DOT)? ID LPAREN (exp (COMMA exp)*)? RPAREN\n");
+        System.out.print("====================== exp ->  funcCall\n");
 		/*******************************/
 		/* COPY INPUT DATA NENBERS ... */
 		/*******************************/
@@ -73,6 +77,15 @@ public class AST_EXP_FUNC_CALL extends AST_EXP
             return null;
         }
     }
+
+    public TEMP IRme()
+	{
+		// if (f != null) { f.IRme(); }
+		// return null;
+
+        if (f != null) { return f.IRme(); }
+		return null;
+	}
 
     public boolean isExpConst() {
 		return false;

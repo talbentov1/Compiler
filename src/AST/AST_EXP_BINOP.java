@@ -1,5 +1,8 @@
 package AST;
 
+import IR.*;
+import TEMP.TEMP;
+import TEMP.TEMP_FACTORY;
 import TYPES.*;
 
 public class AST_EXP_BINOP extends AST_EXP
@@ -112,7 +115,67 @@ public class AST_EXP_BINOP extends AST_EXP
 	
 	}
 
+	public TEMP IRme()
+	{
+		TEMP t1 = null;
+		TEMP t2 = null;
+		TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
+				
+		if (left  != null) t1 = left.IRme();
+		if (right != null) t2 = right.IRme();
+		
+		if (OP instanceof AST_BINOP_OP){
+			int OP_TYPE = ((AST_BINOP_OP)OP).opType;
+
+			if (OP_TYPE == 0)
+			{
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_Add_Integers(dst,t1,t2));
+			}
+			if (OP_TYPE == 1)
+			{
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_Sub_Integers(dst,t1,t2));
+			}
+			if (OP_TYPE == 2)
+			{
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_Mul_Integers(dst,t1,t2));
+			}
+			if (OP_TYPE == 3)
+			{
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_Div_Integers(dst,t1,t2));
+			}
+			if (OP_TYPE == 4)
+			{
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t1,t2));
+			}
+			if (OP_TYPE == 5)
+			{
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_GT_Integers(dst,t1,t2));
+			}
+			if (OP_TYPE == 6)
+			{
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_EQ_Integers(dst,t1,t2));
+			}
+			return dst;
+			}
+		return null;
+	}
+
 	public boolean isExpConst() {
 		return false;
 	}
+
 }

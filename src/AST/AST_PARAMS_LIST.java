@@ -109,4 +109,7 @@ public class AST_PARAMS_LIST extends AST_Node {
 		else {tail = paramsList.SemantMe(currentOffset + 4);} // 4 bytes for each parameter
         return new TYPE_LIST(param_t, tail);
     }
+
+    // IRme() not needed for ex4
+
 }

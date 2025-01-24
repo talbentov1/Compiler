@@ -1,7 +1,10 @@
 package AST;
 
 import TYPES.*;
+import IR.IR;
+import IR.IRcommand_Label;
 import SYMBOL_TABLE.*;
+import TEMP.TEMP;
 
 
 public class AST_FUNCDEC_NO_PARAMS extends AST_FUNCDEC_TYPE
@@ -211,4 +214,13 @@ public class AST_FUNCDEC_NO_PARAMS extends AST_FUNCDEC_TYPE
         return true; 
     }
 
+    public TEMP IRme()
+	{
+		IR.
+		getInstance().
+		Add_IRcommand(new IRcommand_Label("main"));		
+		if (body != null) body.IRme();
+
+		return null;
+	}
 }

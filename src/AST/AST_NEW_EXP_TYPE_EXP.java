@@ -92,4 +92,7 @@ public class AST_NEW_EXP_TYPE_EXP extends AST_NEW_EXP
         /*******************/
         return new_t;
     }
+
+    // IRme() not needed for ex4
+
 }
