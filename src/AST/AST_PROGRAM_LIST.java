@@ -76,7 +76,7 @@ public class AST_PROGRAM_LIST extends AST_PROGRAM
 
     public TEMP IRme() {
 		if(dec1 != null){dec1.IRme();}
-        if (optionalDec2 != null) {optionalDec2.SemantMe();}
+        if (optionalDec2 != null) {optionalDec2.IRme();}
         return null;
     }
 

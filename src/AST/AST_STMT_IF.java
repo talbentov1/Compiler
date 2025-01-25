@@ -93,11 +93,11 @@ public class AST_STMT_IF extends AST_STMT
 		String end = IRcommand.getFreshLabel("end");
 
 		IR.getInstance().Add_IRcommand(new IRcommand_Jump_If_Eq_To_Zero(cond.IRme(), end));
-		// IR.getInstance().Add_IRcommand(new IRcommandScope());
+		//IR.getInstance().Add_IRcommand(new IRcommandScope());
 
 		body.IRme();
 
-		// IR.getInstance().Add_IRcommand(new IRcommandScopeDestroy());
+		//IR.getInstance().Add_IRcommand(new IRcommandScopeDestroy());
 		IR.getInstance().Add_IRcommand(new IRcommand_Label(end));
 
 		return null;

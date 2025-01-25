@@ -39,6 +39,10 @@ public class IR
 			it.tail = new IRcommandList(cmd,null);
 		}
 	}
+
+	public void printIR(){
+
+	}
 	
 	/**************************************/
 	/* USUAL SINGLETON IMPLEMENTATION ... */
@@ -63,5 +67,26 @@ public class IR
 			instance = new IR();
 		}
 		return instance;
+	}
+
+	public void printIRCommands()
+	{
+		if (head != null)
+		{
+			// Print the first command
+			System.out.println(head.toString());
+
+			// Print the rest of the commands in the list
+			IRcommandList current = tail;
+			while (current != null)
+			{
+				System.out.println(current.head.toString());
+				current = current.tail;
+			}
+		}
+		else
+		{
+			System.out.println("No IR commands in the list.");
+		}
 	}
 }

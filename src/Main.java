@@ -39,7 +39,7 @@ public class Main
 			/*******************************/
 			/* [4] Initialize a new parser */
 			/*******************************/
-			p = new Parser(l, file_writer, file_writer);
+			p = new Parser(l, file_writer);
 
 			/***********************************/
 			/* [5] 3 ... 2 ... 1 ... Parse !!! */
@@ -61,6 +61,7 @@ public class Main
 			/* [8] IR the AST ... */
 			/**********************/
 			AST.IRme();
+			IR.getInstance().printIR();
 			
 			/*************************/
 			/* [9] Close output file */

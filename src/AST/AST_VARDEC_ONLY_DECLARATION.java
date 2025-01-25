@@ -1,6 +1,9 @@
 package AST;
 import TYPES.*;
+import IR.IR;
+import IR.IRcommand_Allocate;
 import SYMBOL_TABLE.*;
+import TEMP.TEMP;
 
 public class AST_VARDEC_ONLY_DECLARATION extends AST_VARDEC_TYPE
 {
@@ -100,5 +103,11 @@ public class AST_VARDEC_ONLY_DECLARATION extends AST_VARDEC_TYPE
         SYMBOL_TABLE.getInstance().enter(name, t, false, offset);
 
         return new TYPE_CLASS_VAR_DEC(t, name);
+    }
+
+	public TEMP IRme()
+	{
+		IR.getInstance().Add_IRcommand(new IRcommand_Allocate(name));
+        return null;
     }
 }
