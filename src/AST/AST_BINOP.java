@@ -1,4 +1,5 @@
 package AST;
+import TEMP.TEMP;
 import TYPES.*;
 
 public abstract class AST_BINOP extends AST_Node
@@ -7,6 +8,10 @@ public abstract class AST_BINOP extends AST_Node
         super(line);
     }
     public TYPE SemantMe() {
+        return null;
+    }
+
+    public TEMP IRme(){
         return null;
     }
 }

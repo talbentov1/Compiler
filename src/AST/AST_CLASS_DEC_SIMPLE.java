@@ -1,6 +1,7 @@
 package AST;
 
 import SYMBOL_TABLE.SYMBOL_TABLE;
+import TEMP.TEMP;
 import TYPES.TYPE;
 import TYPES.TYPE_CLASS;
 import TYPES.TYPE_LIST;
@@ -95,8 +96,8 @@ public class AST_CLASS_DEC_SIMPLE extends AST_CLASSDEC_TYPE
         /*************************/
         /* Semant Body */
         /*************************/
-
-        SYMBOL_TABLE.getInstance().enter(name, new TYPE_CLASS(null, name, null), true);
+        int offset = SYMBOL_TABLE.getInstance().findNextAvailableOffset();
+        SYMBOL_TABLE.getInstance().enter(name, new TYPE_CLASS(null, name, null), true, offset);
         TYPE_CLASS class1 = new TYPE_CLASS(null, name, body.SemantMe());
 
         
@@ -109,9 +110,14 @@ public class AST_CLASS_DEC_SIMPLE extends AST_CLASSDEC_TYPE
         /*****************/
         /* enter class to symbol table */
         /*****************/
-
-        SYMBOL_TABLE.getInstance().enter(name, class1, true);
+        offset = SYMBOL_TABLE.getInstance().findNextAvailableOffset();
+        SYMBOL_TABLE.getInstance().enter(name, class1, true, offset);
 
         return null;
+    }
+
+    public TEMP IRme()
+    {
+		return null;
     }
 }

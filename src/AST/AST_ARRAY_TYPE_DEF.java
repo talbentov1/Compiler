@@ -97,7 +97,8 @@ public class AST_ARRAY_TYPE_DEF extends AST_ARRAYDEC_TYPE
 
         // insert the new type into the symbol table
         TYPE_ARRAY arr = new TYPE_ARRAY(t, name);
-        st.enter(name, arr, false);
+        int offset = SYMBOL_TABLE.getInstance().findNextAvailableOffset();
+        st.enter(name, arr, false, offset);
         return arr;
     }
 }

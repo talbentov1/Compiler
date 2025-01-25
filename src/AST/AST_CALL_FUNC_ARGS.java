@@ -96,7 +96,12 @@ public class AST_CALL_FUNC_ARGS extends AST_FUNC_CALL
 
     public TEMP IRme()
     {
-        // Ariel, look in AST_EXP_METHOD_CALL in the reference (though i don't think is 100% correct...)
-        // they combined the AST_EXP_FUNC_CALL and AST_CALL_FUNC_ARGS logic there, but i kept them separate
+        TEMP t=null;
+		
+		if (expList != null) { t = expList.exp.IRme(); }
+		
+		IR.getInstance().Add_IRcommand(new IRcommand_PrintInt(t));
+		
+		return null;
     }
 }

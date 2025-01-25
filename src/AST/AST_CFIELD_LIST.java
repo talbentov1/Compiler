@@ -2,6 +2,7 @@ package AST;
 
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import TEMP.TEMP;
 
 public class AST_CFIELD_LIST extends AST_Node {
 
@@ -54,6 +55,11 @@ public class AST_CFIELD_LIST extends AST_Node {
             return new TYPE_LIST(t, null);
         }
         return new TYPE_LIST(t, cFieldList.SemantMe());
+    }
+
+    public TEMP IRme()
+    {
+		return null;
     }
 
 }

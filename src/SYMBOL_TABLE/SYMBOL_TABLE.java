@@ -125,7 +125,7 @@ public class SYMBOL_TABLE
 		SYMBOL_TABLE_ENTRY current = top;
 		int offset = 0;
    		while (current != null && !current.name.equals("SCOPE-BOUNDARY")) {
-			if(current.offset != null && current.offset < 0) {
+			if(current.offset < 0) {
 				offset = current.offset;
 			}
 		}
@@ -136,7 +136,7 @@ public class SYMBOL_TABLE
 		SYMBOL_TABLE_ENTRY current = top;
 		int offset = 0;
    		while (current != null && !current.name.equals("SCOPE-BOUNDARY")) {
-			if(current.offset != null && current.offset < 0) {
+			if(current.offset < 0) {
 				offset = current.offset;
 			}
 		}

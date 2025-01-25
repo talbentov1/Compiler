@@ -1,6 +1,7 @@
 package AST;
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import TEMP.TEMP;
 
 public class AST_CALL_FUNC_VAR_DOT_ARGS extends AST_FUNC_CALL
 {
@@ -110,5 +111,10 @@ public class AST_CALL_FUNC_VAR_DOT_ARGS extends AST_FUNC_CALL
         }
 
         return func.returnType;
+    }
+    
+    public TEMP IRme()
+    {
+		return null;
     }
 }

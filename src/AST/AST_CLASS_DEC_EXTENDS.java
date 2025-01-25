@@ -1,6 +1,7 @@
 package AST;
 
 import SYMBOL_TABLE.SYMBOL_TABLE;
+import TEMP.TEMP;
 import TYPES.TYPE;
 import TYPES.TYPE_CLASS;
 import TYPES.TYPE_LIST;
@@ -102,7 +103,8 @@ public class AST_CLASS_DEC_EXTENDS extends AST_CLASSDEC_TYPE
         TYPE_CLASS extendedClass = (TYPE_CLASS) extendedType;
         SYMBOL_TABLE.getInstance().setCurrentClass(new TYPE_CLASS(extendedClass, name, new TYPE_LIST(null, null)));
         SYMBOL_TABLE.getInstance().beginScope();
-        SYMBOL_TABLE.getInstance().enter(name, new TYPE_CLASS(extendedClass, name, new TYPE_LIST(null, null)), true);
+        int offset = SYMBOL_TABLE.getInstance().findNextAvailableOffset();
+        SYMBOL_TABLE.getInstance().enter(name, new TYPE_CLASS(extendedClass, name, new TYPE_LIST(null, null)), true, offset);
 
         TYPE_CLASS thisClass = new TYPE_CLASS(extendedClass, name, body.SemantMe());
         /*****************/
@@ -110,8 +112,13 @@ public class AST_CLASS_DEC_EXTENDS extends AST_CLASSDEC_TYPE
         /*****************/
         SYMBOL_TABLE.getInstance().setCurrentClass(null);
         SYMBOL_TABLE.getInstance().endScope();
-
-        SYMBOL_TABLE.getInstance().enter(name, thisClass, true);
+        offset = SYMBOL_TABLE.getInstance().findNextAvailableOffset();
+        SYMBOL_TABLE.getInstance().enter(name, thisClass, true, offset);
         return null;
+    }
+
+    public TEMP IRme()
+    {
+		return null;
     }
 }

@@ -1,6 +1,9 @@
 package AST;
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import IR.*;
+import TEMP.TEMP;
+import TEMP.TEMP_FACTORY;
 
 public class AST_ARRAY_DEC extends AST_DEC
 {
@@ -66,5 +69,12 @@ public class AST_ARRAY_DEC extends AST_DEC
 		}
 		
 		return null;	
+	}
+
+	public TEMP IRme() {
+		if (arrayDec != null){
+			return arrayDec.IRme();
+		}
+		return null;
 	}
 }

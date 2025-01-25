@@ -1,6 +1,8 @@
 package AST;
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import TEMP.TEMP;
+
 
 public class AST_BINOP_OP extends AST_BINOP
 {
@@ -99,6 +101,10 @@ public class AST_BINOP_OP extends AST_BINOP
     }
 
     public TYPE SemantMe() {
+        return null;
+    }
+
+    public TEMP IRme(){
         return null;
     }
 }

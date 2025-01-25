@@ -1,5 +1,6 @@
 package AST;
 
+import TEMP.TEMP;
 import TYPES.TYPE;
 
 public class AST_CLASS_DEC extends AST_DEC
@@ -61,5 +62,10 @@ public class AST_CLASS_DEC extends AST_DEC
             return classDec.SemantMe();
         }
         return null;
+    }
+
+    public TEMP IRme()
+    {
+		return null;
     }
 }

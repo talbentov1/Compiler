@@ -1,6 +1,11 @@
 package AST;
 import TYPES.*;
+import IR.IR;
+import IR.IRcommand;
+import IR.IRcommand_Jump_Label;
+import IR.IRcommand_PrintInt;
 import SYMBOL_TABLE.*;
+import TEMP.TEMP;
 
 public class AST_CALL_FUNC_NO_ARGS extends AST_FUNC_CALL
 {
@@ -69,5 +74,11 @@ public class AST_CALL_FUNC_NO_ARGS extends AST_FUNC_CALL
         }
 
         return func.returnType;
+    }
+
+    public TEMP IRme()
+    {
+        IR.getInstance().Add_IRcommand(new IRcommand_Jump_Label(name));
+		return null;
     }
 }

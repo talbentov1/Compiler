@@ -1,6 +1,7 @@
 package AST;
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import TEMP.TEMP;
 
 public class AST_CFIELD_VAR_DEC extends AST_CFIELD
 {
@@ -68,5 +69,10 @@ public class AST_CFIELD_VAR_DEC extends AST_CFIELD
             return cFieldType;
         }
         return null;
+    }
+
+    public TEMP IRme()
+    {
+		return null;
     }
 }

@@ -3,6 +3,7 @@ package AST;
 import TYPES.TYPE;
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import TEMP.TEMP;
 
 public class AST_CFIELD_FUNC_DEC extends AST_CFIELD
 {
@@ -60,5 +61,13 @@ public class AST_CFIELD_FUNC_DEC extends AST_CFIELD
             return f.SemantMe();
         }
         return null;
+    }
+
+    public TEMP IRme()
+    {
+        if (f != null){
+            f.IRme();
+        }
+		return null;
     }
 }
