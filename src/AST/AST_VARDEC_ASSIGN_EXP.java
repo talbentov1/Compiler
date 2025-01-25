@@ -1,7 +1,9 @@
 package AST;
-
+import IR.*;
+import TEMP.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
+
 
 public class AST_VARDEC_ASSIGN_EXP extends AST_VARDEC_TYPE
 {
@@ -118,5 +120,16 @@ public class AST_VARDEC_ASSIGN_EXP extends AST_VARDEC_TYPE
         SYMBOL_TABLE.getInstance().enter(name,typeOfVar, false, offset);
 
         return new TYPE_CLASS_VAR_DEC(typeOfVar, name);
+	}
+
+    public TEMP IRme()
+	{
+		IR.getInstance().Add_IRcommand(new IRcommand_Allocate(name));
+		
+		if (initialValue != null)
+		{
+			IR.getInstance().Add_IRcommand(new IRcommand_Store(name,initialValue.IRme()));
+		}
+		return null;
 	}
 }
