@@ -131,7 +131,7 @@ public class AST_VARDEC_ASSIGN_NEW_EXP extends AST_VARDEC_TYPE
             print_error_and_exit();
         }
 
-        offset = SYMBOL_TABLE.getInstance().findNextAvailableOffset();
+        int offset = SYMBOL_TABLE.getInstance().findNextAvailableOffset();
 
         SYMBOL_TABLE.getInstance().enter(name, typeOfVar, false, offset);
 

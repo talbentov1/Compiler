@@ -115,7 +115,7 @@ public class AST_VARDEC_ASSIGN_EXP extends AST_VARDEC_TYPE
             }
         }
         
-        offset = SYMBOL_TABLE.getInstance().findNextAvailableOffset();
+        int offset = SYMBOL_TABLE.getInstance().findNextAvailableOffset();
 
         SYMBOL_TABLE.getInstance().enter(name,typeOfVar, false, offset);
 
@@ -126,9 +126,9 @@ public class AST_VARDEC_ASSIGN_EXP extends AST_VARDEC_TYPE
 	{
 		IR.getInstance().Add_IRcommand(new IRcommand_Allocate(name));
 		
-		if (initialValue != null)
+		if (ex != null)
 		{
-			IR.getInstance().Add_IRcommand(new IRcommand_Store(name, initialValue.IRme()));
+			IR.getInstance().Add_IRcommand(new IRcommand_Store(name, ex.IRme()));
 		}
 		return null;
 	}

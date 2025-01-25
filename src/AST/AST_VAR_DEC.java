@@ -1,6 +1,9 @@
 package AST;
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import IR.*;
+import TEMP.TEMP;
+import TEMP.TEMP_FACTORY;
 
 public class AST_VAR_DEC extends AST_DEC
 {

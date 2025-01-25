@@ -92,7 +92,7 @@ public class AST_VARDEC_ONLY_DECLARATION extends AST_VARDEC_TYPE
                 System.out.format(">> ERROR [%d] shadowing %s is illegal.\n", line, name);
                 print_error_and_exit();
             }
-            offset = SYMBOL_TABLE.getInstance().findNextAvailableOffsetInClass(currClass);
+            offset = SYMBOL_TABLE.getInstance().findNextAvailableOffsetInClass();
         } else {
             offset = SYMBOL_TABLE.getInstance().findNextAvailableOffset();
         }

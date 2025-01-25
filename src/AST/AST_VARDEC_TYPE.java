@@ -1,6 +1,7 @@
 package AST;
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import TEMP.*;
 
 public abstract class AST_VARDEC_TYPE extends AST_Node
 {
