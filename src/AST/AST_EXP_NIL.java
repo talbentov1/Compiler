@@ -1,5 +1,9 @@
 package AST;
 
+import IR.IR;
+import IR.IRcommandConstInt;
+import TEMP.TEMP;
+import TEMP.TEMP_FACTORY;
 import TYPES.*;
 
 public class AST_EXP_NIL extends AST_EXP
@@ -50,6 +54,12 @@ public class AST_EXP_NIL extends AST_EXP
         /***************************************/
         return TYPE_NIL.getInstance();
     }
+
+	public TEMP IRme() {
+		TEMP ret = TEMP_FACTORY.getInstance().getFreshTEMP();
+		IR.getInstance().Add_IRcommand(new IRcommandConstInt(ret, 0)); // 0 is the default value of nil
+		return ret;
+	}
 
 	public boolean isExpConst() {
 		return true;

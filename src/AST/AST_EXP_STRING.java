@@ -57,6 +57,8 @@ public class AST_EXP_STRING extends AST_EXP
 		return TYPE_STRING.getInstance();
 	}
 
+	// IRme() not needed for ex4
+
 	public boolean isExpConst() {
 		return true;
 	}

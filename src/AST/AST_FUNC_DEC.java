@@ -1,5 +1,6 @@
 package AST;
 
+import TEMP.TEMP;
 import TYPES.TYPE;
 
 public class AST_FUNC_DEC extends AST_DEC
@@ -65,4 +66,10 @@ public class AST_FUNC_DEC extends AST_DEC
         }
         return null;
     }
+
+    public TEMP IRme()
+	{
+		if (functionDec != null) { functionDec.IRme(); }
+		return null;
+	}
 }

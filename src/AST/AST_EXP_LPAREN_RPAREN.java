@@ -1,5 +1,6 @@
 package AST;
 
+import TEMP.TEMP;
 import TYPES.TYPE;
 
 public class AST_EXP_LPAREN_RPAREN extends AST_EXP
@@ -67,6 +68,10 @@ public class AST_EXP_LPAREN_RPAREN extends AST_EXP
         /***************************************/
         return t;
     }
+
+    public TEMP IRme() {
+		return exp.IRme();
+	}
 
     public boolean isExpConst() {
 		return false;

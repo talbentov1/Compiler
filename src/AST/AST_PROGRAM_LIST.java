@@ -1,5 +1,6 @@
 package AST;
 
+import TEMP.TEMP;
 import TYPES.TYPE;
 
 public class AST_PROGRAM_LIST extends AST_PROGRAM
@@ -72,4 +73,11 @@ public class AST_PROGRAM_LIST extends AST_PROGRAM
         /******************************************/
         return null;
     }
+
+    public TEMP IRme() {
+		if(dec1 != null){dec1.IRme();}
+        if (optionalDec2 != null) {optionalDec2.SemantMe();}
+        return null;
+    }
+
 }

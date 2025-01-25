@@ -1,5 +1,6 @@
 package AST;
 
+import TEMP.TEMP;
 import TYPES.TYPE;
 
 public class AST_EXP_VAR extends AST_EXP
@@ -67,6 +68,10 @@ public class AST_EXP_VAR extends AST_EXP
 		/* [2] Return the type of the variable */
 		/***************************************/
 		return t;
+	}
+
+	public TEMP IRme() {
+		return var.IRme();
 	}
 
 	public boolean isExpConst() {

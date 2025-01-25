@@ -2,6 +2,8 @@ package AST;
 
 import java.io.PrintWriter;
 
+import TEMP.TEMP;
+
 public abstract class AST_Node
 {
 	/*******************************************/
@@ -30,4 +32,8 @@ public abstract class AST_Node
 	{
 		System.out.print("AST NODE UNKNOWN\n");
 	}
+
+	public TEMP IRme(){
+        return null;
+    }
 }
