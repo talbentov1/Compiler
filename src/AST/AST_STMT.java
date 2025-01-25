@@ -18,4 +18,8 @@ public abstract class AST_STMT extends AST_Node
 	public TYPE SemantMe() {
 		return null;		
     }
+
+	public TEMP IRme() {
+		return null;
+	}
 }

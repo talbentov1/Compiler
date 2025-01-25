@@ -62,4 +62,9 @@ public class AST_VAR_DEC extends AST_DEC
         }
         return null;
     }
+
+    public TEMP IRme() {
+		this.variableDec.IRme();
+		return null;
+	}
 }

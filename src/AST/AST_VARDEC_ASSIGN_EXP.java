@@ -128,7 +128,7 @@ public class AST_VARDEC_ASSIGN_EXP extends AST_VARDEC_TYPE
 		
 		if (initialValue != null)
 		{
-			IR.getInstance().Add_IRcommand(new IRcommand_Store(name,initialValue.IRme()));
+			IR.getInstance().Add_IRcommand(new IRcommand_Store(name, initialValue.IRme()));
 		}
 		return null;
 	}

@@ -64,4 +64,9 @@ public class AST_STMT_FUNC_CALL extends AST_STMT
             return null;
         }
     }
+
+    public TEMP IRme() {
+        this.f.IRme();
+        return null;
+    }
 }

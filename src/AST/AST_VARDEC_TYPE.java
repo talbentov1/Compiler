@@ -10,4 +10,8 @@ public abstract class AST_VARDEC_TYPE extends AST_Node
     public TYPE SemantMe() {
         return null;
     }
+
+    public TEMP IRme() {
+        return null;
+    }
 }

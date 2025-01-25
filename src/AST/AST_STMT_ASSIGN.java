@@ -78,4 +78,13 @@ public class AST_STMT_ASSIGN extends AST_STMT
 
 		return null;
 	}
+
+	public TEMP IRme()
+	{
+		IR.getInstance().Add_IRcommand(new IRcommand_Assign(((AST_VAR_SIMPLE) var).name));
+		TEMP src = exp.IRme();
+		IR.getInstance().Add_IRcommand(new IRcommand_Store(((AST_VAR_SIMPLE) var).name, src));
+
+		return null;
+	}
 }
