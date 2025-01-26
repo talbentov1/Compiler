@@ -61,7 +61,7 @@ public class Main
 			/* [8] IR the AST ... */
 			/**********************/
 			AST.IRme();
-			IR.getInstance().printIR();
+			IR.getInstance().printIRCommands();
 			
 			/*************************/
 			/* [9] Close output file */

@@ -128,6 +128,7 @@ public class SYMBOL_TABLE
 			if(current.offset < 0) {
 				offset = current.offset;
 			}
+			current = current.prevtop;
 		}
 		return offset - 4;
 	}
@@ -139,6 +140,7 @@ public class SYMBOL_TABLE
 			if(current.offset < 0) {
 				offset = current.offset;
 			}
+			current = current.prevtop;
 		}
 		return offset + 4;
 	}

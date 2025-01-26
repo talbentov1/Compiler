@@ -22,4 +22,8 @@ public class IRcommandConstInt extends IRcommand
 		this.t = t;
 		this.value = value;
 	}
+	
+	public void printCommand() {
+		System.out.println("t" + t.getSerialNumber() + " = " + value);
+	}
 }

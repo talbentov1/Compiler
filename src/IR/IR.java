@@ -81,16 +81,17 @@ public class IR
 
 	public void printIRCommands()
 	{
+		System.out.println("----------------------------IR---------------------");
 		if (head != null)
 		{
 			// Print the first command
-			System.out.println(head.toString());
+			head.printCommand();
 
 			// Print the rest of the commands in the list
 			IRcommandList current = tail;
 			while (current != null)
 			{
-				System.out.println(current.head.toString());
+				current.head.printCommand();
 				current = current.tail;
 			}
 		}

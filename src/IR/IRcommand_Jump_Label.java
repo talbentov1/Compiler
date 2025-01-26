@@ -20,4 +20,8 @@ public class IRcommand_Jump_Label extends IRcommand
 	{
 		this.label_name = label_name;
 	}
+
+	public void printCommand() {
+		System.out.println("goto " + label_name);
+	}
 }

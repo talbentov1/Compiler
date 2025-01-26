@@ -20,4 +20,8 @@ public class IRcommand_PrintInt extends IRcommand
 	{
 		this.t = t;
 	}
+
+	public void printCommand() {
+		System.out.println("printInt(t" + t.getSerialNumber() + ")");
+	}
 }

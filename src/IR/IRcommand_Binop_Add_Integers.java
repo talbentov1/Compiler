@@ -24,4 +24,8 @@ public class IRcommand_Binop_Add_Integers extends IRcommand
 		this.t1 = t1;
 		this.t2 = t2;
 	}
+
+	public void printCommand() {
+		System.out.println("t" + dst.getSerialNumber() + " = " + "t" + t1.getSerialNumber() + " + t" + t2.getSerialNumber());
+	}
 }
