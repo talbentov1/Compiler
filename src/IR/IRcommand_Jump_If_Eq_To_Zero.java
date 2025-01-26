@@ -22,4 +22,8 @@ public class IRcommand_Jump_If_Eq_To_Zero extends IRcommand
 		this.t          = t;
 		this.label_name = label_name;
 	}
+
+	public void printCommand() {
+		System.out.println("if " + "t" + t.getSerialNumber() + " = 0 jump to " + label_name);
+	}
 }

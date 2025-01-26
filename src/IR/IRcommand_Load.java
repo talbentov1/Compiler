@@ -22,4 +22,8 @@ public class IRcommand_Load extends IRcommand
 		this.dst      = dst;
 		this.var_name = var_name;
 	}
+
+	public void printCommand() {
+		System.out.println("t" + dst.getSerialNumber() + " = " + var_name);
+	}
 }

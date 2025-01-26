@@ -21,4 +21,8 @@ public abstract class IRcommand
 	{
 		return String.format("Label_%d_%s",label_counter++,msg);
 	}
+
+	public void printCommand() {
+		System.out.println(this);
+	}
 }

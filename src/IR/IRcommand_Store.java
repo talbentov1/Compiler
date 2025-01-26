@@ -22,4 +22,8 @@ public class IRcommand_Store extends IRcommand
 		this.src      = src;
 		this.var_name = var_name;
 	}
+
+	public void printCommand() {
+		System.out.println(var_name + " = t" + src.getSerialNumber());
+	}
 }
