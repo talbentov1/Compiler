@@ -1,12 +1,25 @@
 package IR;
 
 public class CFG_Edge {
-    public CFG_Node in;
-    public CFG_Node out;
+    public CFG_Node from;
+    public CFG_Node to;
 
-    public CFG_Edge(CFG_Node in, CFG_Node out){
-        this.in = in;
-        this.out = out;
+    public CFG_Edge(CFG_Node from, CFG_Node to){
+        this.from = from;
+        this.to = to;
+    }
+
+    public CFG_Node getFrom() {
+        return from;
+    }
+
+    public CFG_Node getTo() {
+        return to;
+    }
+
+    @Override
+    public String toString() {
+        return "Edge from Node " + from.getId() + " to Node " + to.getId();
     }
     
 }

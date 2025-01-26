@@ -68,6 +68,16 @@ public class IR
 		}
 		return instance;
 	}
+	
+	public static IRcommand get_head()
+	{
+		return getInstance().head;
+	}
+	
+	public static IRcommandList get_tail()
+	{
+		return getInstance().tail;
+	}
 
 	public void printIRCommands()
 	{

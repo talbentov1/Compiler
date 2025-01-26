@@ -21,4 +21,14 @@ public class IRcommandList
 		this.head = head;
 		this.tail = tail;
 	}
+
+	public IRcommand get_head()
+	{
+		return head;
+	}
+	
+	public IRcommandList get_tail()
+	{
+		return tail;
+	}
 }
