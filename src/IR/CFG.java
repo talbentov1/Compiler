@@ -1,38 +1,29 @@
 package IR;
 
-import IR.*;
-
-import java.util.HashSet;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
-public class CFG_Temp {
-    private ArrayList<CFG_Node_Temp> nodes;
+public class CFG {
+    private ArrayList<CFG_Node> nodes;
     private ArrayList<CFG_Edge> edges;
     
-    private static CFG_Temp CFG_instance = null;
+    private static CFG CFG_instance = null;
 
-    private CFG_Temp() {
+    private CFG() {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
     }
 
-    public static CFG_Temp getInstance() {
+    public static CFG getInstance() {
         if (CFG_instance == null) {
-            CFG_instance = new CFG_Temp();
+            CFG_instance = new CFG();
         }
         return CFG_instance;
     }
 
-    // creates a new CFG_Edge, adds it to the edges list
-    public void createAndAddEdge(CFG_Node_Temp in, CFG_Node_Temp out) {
-        edges.add(new CFG_Edge(in, out));
-    }
-
     // for debug
     public void printCFG() {
-        for (CFG_Node_Temp node : nodes) {
+        for (CFG_Node node : nodes) {
             node.printNodeCommands(); // need to implement
         }
         for (CFG_Edge edge : edges) {
@@ -44,15 +35,15 @@ public class CFG_Temp {
         nodes.clear();
         edges.clear();
 
-        HashMap<String, CFG_Node_Temp> labelToNodeMap = new HashMap<>();
-        HashMap<CFG_Node_Temp, String> pendingJumps = new HashMap<>();
+        HashMap<String, CFG_Node> labelToNodeMap = new HashMap<>();
+        HashMap<CFG_Node, String> pendingJumps = new HashMap<>();
 
         // Iterate through the command list and create nodes
         IRcommand current = IR.getInstance().get_head();
         IRcommandList next = IR.getInstance().get_tail();
         
         while (current != null) {
-            CFG_Node_Temp currentNode = new CFG_Node_Temp(current);
+            CFG_Node currentNode = new CFG_Node(current);
             nodes.add(currentNode);
 
             if (current instanceof IRcommand_Label) {
@@ -82,13 +73,13 @@ public class CFG_Temp {
 
         // Connect nodes with edges
         for (int i = 0; i < nodes.size(); i++) {
-            CFG_Node_Temp currentNode = nodes.get(i);
+            CFG_Node currentNode = nodes.get(i);
             IRcommand command = currentNode.getCommand();
 
             // Connect to the next command (if not a jump)
             if (!(command instanceof IRcommand_Jump_Label || command instanceof IRcommand_Jump_If_Eq_To_Zero)) {
                 if (i + 1 < nodes.size()) {
-                    CFG_Node_Temp nextNode = nodes.get(i + 1);
+                    CFG_Node nextNode = nodes.get(i + 1);
                     edges.add(new CFG_Edge(currentNode, nextNode));
                 }
             }
@@ -97,7 +88,7 @@ public class CFG_Temp {
             if (pendingJumps.containsKey(currentNode)) {
                 String targetLabel = pendingJumps.get(currentNode);
                 if (labelToNodeMap.containsKey(targetLabel)) {
-                    CFG_Node_Temp targetNode = labelToNodeMap.get(targetLabel);
+                    CFG_Node targetNode = labelToNodeMap.get(targetLabel);
                     edges.add(new CFG_Edge(currentNode, targetNode));
                 } else {
                     System.err.println("Warning: Label " + targetLabel + " not found for jump command.");
