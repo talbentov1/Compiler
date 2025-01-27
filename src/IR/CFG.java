@@ -81,6 +81,8 @@ public class CFG {
                 if (i + 1 < nodes.size()) {
                     CFG_Node nextNode = nodes.get(i + 1);
                     edges.add(new CFG_Edge(currentNode, nextNode));
+                    currentNode.addToOutNodes(nextNode);
+                    nextNode.addToInNodes(currentNode);
                 }
             }
 
@@ -90,11 +92,21 @@ public class CFG {
                 if (labelToNodeMap.containsKey(targetLabel)) {
                     CFG_Node targetNode = labelToNodeMap.get(targetLabel);
                     edges.add(new CFG_Edge(currentNode, targetNode));
+                    currentNode.addToOutNodes(targetNode);
+                    targetNode.addToInNodes(currentNode);
                 } else {
                     System.err.println("Warning: Label " + targetLabel + " not found for jump command.");
                 }
             }
         }
+    }
+
+    public ArrayList<CFG_Node> getNodes(){
+        return this.nodes;
+    }
+
+    public ArrayList<CFG_Edge> getEdges(){
+        return this.edges;
     }
 
 }
