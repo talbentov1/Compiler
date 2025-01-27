@@ -1,6 +1,7 @@
 package IR;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 
 public abstract class Analysis {
@@ -8,10 +9,10 @@ public abstract class Analysis {
     public boolean directionIsForward; // false means that the analysis direction is backwards
     public boolean joinIsUnion; // false means that join operation is intersection
     public boolean chaoticMode; // modes can be: chaotic / fixpoint, false means fixpoint
-    public HashSet<Pair> initialValue;
+    public HashSet<Dom> initialValue;
     public CFG cfg;
 
-    public Analysis(String name, boolean forward, boolean union, boolean chaoticMode, HashSet<Pair> initialValue, CFG cfg){
+    public Analysis(String name, boolean forward, boolean union, boolean chaoticMode, HashSet<Dom> initialValue, CFG cfg){
         System.out.println("initializing Analysis: " + name);
         this.name = name;
         this.directionIsForward = forward;
@@ -21,15 +22,16 @@ public abstract class Analysis {
         this.cfg = cfg;
     }
 
-    public abstract HashSet<Pair> kill(CFG_Node node);
-    public abstract HashSet<Pair> gen(CFG_Node node);
+    public abstract HashSet<Dom> kill(CFG_Node node);
+    public abstract HashSet<Dom> gen(CFG_Node node);
+    public abstract void analyzeResult();
 
     public void transfer(CFG_Node node){
         calcNodeInput(node);
-        HashSet<Pair> in_i = node.getAnalysisIn();
-        HashSet<Pair> kill_i = kill(node);
-        HashSet<Pair> gen_i = gen(node);
-        HashSet<Pair> out = new HashSet<>(in_i);
+        HashSet<Dom> in_i = node.getAnalysisIn();
+        HashSet<Dom> kill_i = kill(node);
+        HashSet<Dom> gen_i = gen(node);
+        HashSet<Dom> out = new HashSet<>(in_i);
         out.removeAll(kill_i);
         out.addAll(gen_i);
 
@@ -38,7 +40,7 @@ public abstract class Analysis {
 
     public void calcNodeInput(CFG_Node node){
         ArrayList<CFG_Node> inNodes = node.getInNodes();
-        HashSet<Pair> result = new HashSet<>();
+        HashSet<Dom> result = new HashSet<>();
         
         if (inNodes.isEmpty()) {
             result = this.initialValue;
@@ -67,15 +69,25 @@ public abstract class Analysis {
         else{
             startFixpoint();
         }
+        analyzeResult();
     }
 
     public void startChaoticIterations(){
         System.out.println("Starting chaotic iterations...");
-        ArrayList<Integer> workList = new ArrayList<>();
+        TreeSet<Integer> workList = new TreeSet<>();
         ArrayList<CFG_Node> nodes = cfg.getNodes();
         workList.add(0);
 
-        // still need to implement rest of chaotic iterations
+        while (!workList.isEmpty()) {
+            Integer ind = workList.pollFirst(); // Retrieves and removes the smallest element
+            CFG_Node node = nodes.get(ind);
+            transfer(node);
+
+            ArrayList<CFG_Node> outList = node.getOutNodes();
+            for (CFG_Node outNode : outList) {
+                workList.add(outNode.getIndex());
+            }
+        }
 
     }
 

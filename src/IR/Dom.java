@@ -1,11 +1,11 @@
 package IR;
 import java.util.Objects;
 
-class Pair {
+class Dom {
     private String varName;
     private Integer label;
 
-    public Pair(String varName, Integer label) {
+    public Dom(String varName, Integer label) {
         this.varName = varName;
         this.label = label;
     }
@@ -22,7 +22,7 @@ class Pair {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Pair pair = (Pair) o;
+        Dom pair = (Dom) o;
         return Objects.equals(varName, pair.varName) && Objects.equals(label, pair.label);
     }
 

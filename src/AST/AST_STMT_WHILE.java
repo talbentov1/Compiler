@@ -106,15 +106,14 @@ public class AST_STMT_WHILE extends AST_STMT
 		/******************************************/
 		/* [4] Jump conditionally to the loop end */
 		/******************************************/
-		IR.
-		getInstance().
-		Add_IRcommand(new IRcommand_Jump_If_Eq_To_Zero(cond_temp,label_end));		
+		IR.getInstance().Add_IRcommand(new IRcommand_Jump_If_Eq_To_Zero(cond_temp,label_end));		
 
 		/*******************/
 		/* [5] body.IRme() */
 		/*******************/
+		IR.getInstance().Add_IRcommand(new IRcommandScopeStart());		
 		body.IRme();
-
+		IR.getInstance().Add_IRcommand(new IRcommandScopeEnd());
 		/******************************/
 		/* [6] Jump to the loop entry */
 		/******************************/

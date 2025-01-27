@@ -19,7 +19,7 @@ public class CFG_Edge {
 
     @Override
     public String toString() {
-        return "Edge from Node " + from.getId() + " to Node " + to.getId();
+        return "Edge from Node " + from.getIndex() + " to Node " + to.getIndex();
     }
     
 }

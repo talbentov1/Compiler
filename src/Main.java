@@ -62,9 +62,16 @@ public class Main
 			/**********************/
 			AST.IRme();
 			IR.getInstance().printIRCommands();
+
+			/*************************/
+			/* [9] build CFG and run analysis */
+			/*************************/
+			Uninitialized_Variable_Analysis.prepare();
+			Uninitialized_Variable_Analysis analysis = new Uninitialized_Variable_Analysis(file_writer);
+			analysis.runAnalysis();
 			
 			/*************************/
-			/* [9] Close output file */
+			/* [10] Close output file */
 			/*************************/
 			file_writer.close();
 

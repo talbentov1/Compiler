@@ -1,17 +1,26 @@
 package IR;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class CFG {
+    private int scope;
     private ArrayList<CFG_Node> nodes;
     private ArrayList<CFG_Edge> edges;
-    
+    private Set<String> varNames;
+
     private static CFG CFG_instance = null;
 
     private CFG() {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
+        varNames = new TreeSet<>();
+        scope = 0;
     }
 
     public static CFG getInstance() {
@@ -43,8 +52,10 @@ public class CFG {
         IRcommandList next = IR.getInstance().get_tail();
         
         while (current != null) {
-            CFG_Node currentNode = new CFG_Node(current);
+            CFG_Node currentNode = new CFG_Node(current, scope);
             nodes.add(currentNode);
+
+            advanceScope(current);
 
             if (current instanceof IRcommand_Label) {
                 IRcommand_Label labelCommand = (IRcommand_Label) current;
@@ -60,6 +71,8 @@ public class CFG {
                 }
                 pendingJumps.put(currentNode, targetLabel);
             }
+
+            addVarNames(current);
 
             if (next != null){
                 current = next.get_head();
@@ -101,12 +114,41 @@ public class CFG {
         }
     }
 
+    public void advanceScope(IRcommand command){
+        if (command instanceof IRcommandScopeStart){
+            this.scope++;
+        }
+        if (command instanceof IRcommandScopeEnd){
+            this.scope--;
+        }
+    }
+
+    public void addVarNames(IRcommand command){
+        if (command instanceof IRcommand_Store){
+            varNames.add(((IRcommand_Store) command).var_name);
+        }
+        if (command instanceof IRcommand_Load){
+            varNames.add(((IRcommand_Load) command).var_name);
+        }
+        if (command instanceof IRcommand_Allocate){
+            varNames.add(((IRcommand_Allocate) command).var_name);
+        }
+    }
+
     public ArrayList<CFG_Node> getNodes(){
         return this.nodes;
     }
 
     public ArrayList<CFG_Edge> getEdges(){
         return this.edges;
+    }
+
+    public int size(){
+        return this.nodes.size();
+    }
+
+    public Set<String> getVarNames(){
+        return this.varNames;
     }
 
 }

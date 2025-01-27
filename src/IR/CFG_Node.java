@@ -5,20 +5,23 @@ import java.util.ArrayList;
 
 public class CFG_Node {
     private static int idCounter = 0; 
-    private int uniqueId; 
+    private int uniqueIndex; 
+    private int scope;
     private IRcommand command;
     private ArrayList<CFG_Node> inNodes;
     private ArrayList<CFG_Node> outNodes;
-    private HashSet<Pair> analysisIn;
-    private HashSet<Pair> analysisOut;
+    private HashSet<Dom> analysisIn;
+    private HashSet<Dom> analysisOut;
 
-    public CFG_Node(IRcommand command) {
-        this.uniqueId = idCounter++; // Assign unique id and increment counter
+    public CFG_Node(IRcommand command, int currScope) {
+        this.uniqueIndex = idCounter;
         this.command = command;
+        idCounter++;
+        scope = currScope;
     }
 
-    public int getId() {
-        return uniqueId; 
+    public int getIndex() {
+        return uniqueIndex; 
     }
 
     public IRcommand getCommand() {
@@ -45,19 +48,23 @@ public class CFG_Node {
         return this.outNodes;
     }
 
-    public HashSet<Pair> getAnalysisOut(){
+    public HashSet<Dom> getAnalysisOut(){
         return this.analysisOut;
     }
 
-    public void setAnalysisOut(HashSet<Pair> output){
+    public void setAnalysisOut(HashSet<Dom> output){
         this.analysisOut = output;
     }
 
-    public HashSet<Pair> getAnalysisIn(){
+    public HashSet<Dom> getAnalysisIn(){
         return this.analysisIn;
     }
 
-    public void setAnalysisIn(HashSet<Pair> input){
+    public void setAnalysisIn(HashSet<Dom> input){
         this.analysisIn = input;
+    }
+
+    public int getScope(){
+        return scope;
     }
 }

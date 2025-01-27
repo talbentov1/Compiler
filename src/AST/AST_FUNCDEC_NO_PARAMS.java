@@ -2,6 +2,8 @@ package AST;
 
 import TYPES.*;
 import IR.IR;
+import IR.IRcommandScopeEnd;
+import IR.IRcommandScopeStart;
 import IR.IRcommand_Label;
 import SYMBOL_TABLE.*;
 import TEMP.TEMP;
@@ -216,11 +218,10 @@ public class AST_FUNCDEC_NO_PARAMS extends AST_FUNCDEC_TYPE
 
     public TEMP IRme()
 	{
-		IR.
-		getInstance().
-		Add_IRcommand(new IRcommand_Label("main"));		
+		IR.getInstance().Add_IRcommand(new IRcommand_Label("main"));
+        IR.getInstance().Add_IRcommand(new IRcommandScopeStart());		
 		if (body != null) body.IRme();
-
+        IR.getInstance().Add_IRcommand(new IRcommandScopeEnd());		
 		return null;
 	}
 }
