@@ -1,19 +1,19 @@
 package IR;
 
 public class CFG_Edge {
-    public CFG_Node_Temp from;
-    public CFG_Node_Temp to;
+    public CFG_Node from;
+    public CFG_Node to;
 
-    public CFG_Edge(CFG_Node_Temp from, CFG_Node_Temp to){
+    public CFG_Edge(CFG_Node from, CFG_Node to){
         this.from = from;
         this.to = to;
     }
 
-    public CFG_Node_Temp getFrom() {
+    public CFG_Node getFrom() {
         return from;
     }
 
-    public CFG_Node_Temp getTo() {
+    public CFG_Node getTo() {
         return to;
     }
 
