@@ -5,35 +5,24 @@ import IR.*;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
-public class CFG {
+public class CFG_Temp {
     private ArrayList<CFG_Node_Temp> nodes;
     private ArrayList<CFG_Edge> edges;
     
-    private static CFG CFG_instance = null;
+    private static CFG_Temp CFG_instance = null;
 
-    private IRcommand currentCommand;
-    private IRcommandList commandsList;
-
-    private CFG() {
+    private CFG_Temp() {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
-        currentCommand = null;
-        commandsList = null;
     }
 
-    public static CFG getInstance() {
+    public static CFG_Temp getInstance() {
         if (CFG_instance == null) {
-            CFG_instance = new CFG();
+            CFG_instance = new CFG_Temp();
         }
         return CFG_instance;
-    }
-
-    // creates a new CFG_Node_Temp, adds it to the nodes list and returns it
-    public CFG_Node_Temp createAndAddNode() {
-        CFG_Node_Temp newNode = new CFG_Node_Temp();
-        nodes.add(newNode);
-        return newNode;
     }
 
     // creates a new CFG_Edge, adds it to the edges list
@@ -60,6 +49,8 @@ public class CFG {
 
         // Iterate through the command list and create nodes
         IRcommand current = IR.getInstance().get_head();
+        IRcommandList next = IR.getInstance().get_tail();
+        
         while (current != null) {
             CFG_Node_Temp currentNode = new CFG_Node_Temp(current);
             nodes.add(currentNode);
@@ -79,7 +70,14 @@ public class CFG {
                 pendingJumps.put(currentNode, targetLabel);
             }
 
-            current = current.nextCommand;
+            if (next != null){
+                current = next.get_head();
+                next = next.get_tail();
+            }
+            else{
+                current = null;
+                next = null;
+            }
         }
 
         // Connect nodes with edges
