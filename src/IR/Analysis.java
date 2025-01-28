@@ -27,7 +27,6 @@ public abstract class Analysis {
     public abstract void analyzeResult();
 
     public void transfer(CFG_Node node){
-        calcNodeInput(node);
         HashSet<Dom> in_i = node.getAnalysisIn();
         HashSet<Dom> kill_i = kill(node);
         HashSet<Dom> gen_i = gen(node);
@@ -81,11 +80,17 @@ public abstract class Analysis {
         while (!workList.isEmpty()) {
             Integer ind = workList.pollFirst(); // Retrieves and removes the smallest element
             CFG_Node node = nodes.get(ind);
+            HashSet<Dom> outBefore = node.getAnalysisOut();
+            calcNodeInput(node);
             transfer(node);
+            HashSet<Dom> outAfter = node.getAnalysisOut();
 
-            ArrayList<CFG_Node> outList = node.getOutNodes();
-            for (CFG_Node outNode : outList) {
-                workList.add(outNode.getIndex());
+            if (!outBefore.equals(outAfter)){
+                ArrayList<CFG_Node> outList = node.getOutNodes();
+                for (CFG_Node outNode : outList) {
+                    calcNodeInput(outNode);
+                    workList.add(outNode.getIndex());
+                }
             }
         }
 
