@@ -1,9 +1,12 @@
 package IR;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class Uninitialized_Variable_Analysis extends Analysis {
     public static CFG cfg;
@@ -44,8 +47,33 @@ public class Uninitialized_Variable_Analysis extends Analysis {
     }
     
     @Override
-    public void analyzeResult(){
-
+    public void analyzeResult() {
+        ArrayList<CFG_Node> nodes = cfg.getNodes();
+        TreeSet<String> foundVars = new TreeSet<>();
+    
+        for (CFG_Node node : nodes) {
+            String usedVar = node.usedVarInNode();
+            if (usedVar == null) {
+                continue;
+            }
+    
+            HashSet<Dom> inSet = node.getAnalysisIn();
+                boolean found = inSet.stream()
+                .anyMatch(dom -> usedVar.equals(dom.getVarName()) && dom.getLabel() == null);
+    
+            if (found) {
+                foundVars.add(usedVar);
+            }
+        }
+        
+        if (foundVars.size() == 0){
+            file_writer.println("OK!");
+        }
+        else{
+            for (String var : foundVars) {
+                file_writer.println(var);
+            }
+        }
     }
 
     public static void prepare(){

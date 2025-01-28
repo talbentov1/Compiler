@@ -67,4 +67,11 @@ public class CFG_Node {
     public int getScope(){
         return scope;
     }
+
+    public String usedVarInNode(){
+        if (this.command instanceof IRcommand_Load){
+            return ((IRcommand_Load) command).var_name;
+        }
+        return null;
+    }
 }

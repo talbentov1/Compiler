@@ -21,21 +21,12 @@ parser code
 	}
 	public void report_error(String message, Object info)
 	{
-		if(this.isSyntaxError){
-			this.printWriter.write("ERROR(" + lexer.getLine() + ")\n");
-		}
-		else{
-			this.printWriter.write("ERROR\n");
-		}
-
 		System.out.print("ERROR >> ");		
 		System.out.print("[");
 		System.out.print(lexer.getLine());
 		System.out.print(":");
 		System.out.print(lexer.getTokenStartPosition());
 		System.out.print("] ");	
-		this.printWriter.close();
-		System.exit(0);
 	}
 :}
 
