@@ -90,7 +90,7 @@ public class CFG {
             IRcommand command = currentNode.getCommand();
 
             // Connect to the next command (if not a jump)
-            if (!(command instanceof IRcommand_Jump_Label || command instanceof IRcommand_Jump_If_Eq_To_Zero)) {
+            if (!(command instanceof IRcommand_Jump_Label)) {
                 if (i + 1 < nodes.size()) {
                     CFG_Node nextNode = nodes.get(i + 1);
                     edges.add(new CFG_Edge(currentNode, nextNode));

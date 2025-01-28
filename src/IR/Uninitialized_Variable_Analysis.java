@@ -29,8 +29,8 @@ public class Uninitialized_Variable_Analysis extends Analysis {
             for (int i=0; i<cfg.size(); i++){
                 killSet.add(new Dom(varName, i));
             }
+            killSet.add(new Dom(varName, null));
         }
-
         return killSet;
     }
 
@@ -53,13 +53,13 @@ public class Uninitialized_Variable_Analysis extends Analysis {
     
         for (CFG_Node node : nodes) {
             String usedVar = node.usedVarInNode();
+
             if (usedVar == null) {
                 continue;
             }
-    
+
             HashSet<Dom> inSet = node.getAnalysisIn();
-                boolean found = inSet.stream()
-                .anyMatch(dom -> usedVar.equals(dom.getVarName()) && dom.getLabel() == null);
+            boolean found = inSet.stream().anyMatch(dom -> usedVar.equals(dom.getVarName()) && dom.getLabel() == null);
     
             if (found) {
                 foundVars.add(usedVar);
@@ -67,7 +67,7 @@ public class Uninitialized_Variable_Analysis extends Analysis {
         }
         
         if (foundVars.size() == 0){
-            file_writer.println("OK!");
+            file_writer.println("!OK");
         }
         else{
             for (String var : foundVars) {

@@ -55,7 +55,7 @@ public class Main
 			/* [7] Semant the AST ... */
 			/**************************/
 			AST.SemantMe();
-			file_writer.write("OK\n");
+			// file_writer.write("OK\n");
 
 			/**********************/
 			/* [8] IR the AST ... */

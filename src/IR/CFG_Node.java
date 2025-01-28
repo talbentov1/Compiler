@@ -16,6 +16,10 @@ public class CFG_Node {
     public CFG_Node(IRcommand command, int currScope) {
         this.uniqueIndex = idCounter;
         this.command = command;
+        this.inNodes = new ArrayList<>();
+        this.outNodes = new ArrayList<>();
+        this.analysisIn = new HashSet<>();
+        this.analysisOut = new HashSet<>();
         idCounter++;
         scope = currScope;
     }
