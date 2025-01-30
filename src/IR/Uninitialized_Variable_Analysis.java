@@ -25,18 +25,20 @@ public class Uninitialized_Variable_Analysis extends Analysis {
             IRcommand_Store storeCommand = (IRcommand_Store) command;
             String varName = storeCommand.var_name;
             for (int i=0; i<cfg.size(); i++) {
-                killSet.add(new Dom(varName, i));
+                killSet.add(new Dom(varName, i, node.getScope()));
             }
-            killSet.add(new Dom(varName, null));
+            killSet.add(new Dom(varName, null, node.getScope()));
+            killSet.add(new Dom(varName, null, null));
         }
         if (command instanceof IRcommand_Load){
             // might want to modify based on scope
             IRcommand_Load loadCommand = (IRcommand_Load) command;
             String tempName = "t" + loadCommand.dst.getSerialNumber();
             for (int i=0; i<cfg.size(); i++) {
-                killSet.add(new Dom(tempName, i));
+                killSet.add(new Dom(tempName, i, node.getScope()));
             }
-            killSet.add(new Dom(tempName, null));
+            killSet.add(new Dom(tempName, null, node.getScope()));
+            killSet.add(new Dom(tempName, null, null));
         }
 
         if(command instanceof IRcommand_Binop)
@@ -44,9 +46,10 @@ public class Uninitialized_Variable_Analysis extends Analysis {
             IRcommand_Binop binopCommand = (IRcommand_Binop) command;
             String tempName = "t" + binopCommand.dst.getSerialNumber();
             for (int i=0; i<cfg.size(); i++) {
-                killSet.add(new Dom(tempName, i));
+                killSet.add(new Dom(tempName, i, node.getScope()));
             }
-            killSet.add(new Dom(tempName, null));
+            killSet.add(new Dom(tempName, null, node.getScope()));
+            killSet.add(new Dom(tempName, null, null));
         }
 
         if(command instanceof IRcommand_Allocate)
@@ -54,10 +57,22 @@ public class Uninitialized_Variable_Analysis extends Analysis {
             IRcommand_Allocate allocateCommand = (IRcommand_Allocate) command;
             String varName = allocateCommand.var_name;
             for (int i=0; i<cfg.size(); i++) {
-                killSet.add(new Dom(varName, i));
+                killSet.add(new Dom(varName, i, node.getScope()));
             }
-            killSet.add(new Dom(varName, null));
+            killSet.add(new Dom(varName, null, node.getScope()));
+            killSet.add(new Dom(varName, null, null));
         }
+
+        if (command instanceof IRcommandScopeEnd){
+            Set<String> varNames = cfg.getVarNames();
+            for (String varName : varNames) {
+                for (int i=0; i<cfg.size(); i++) {
+                    killSet.add(new Dom(varName, i, node.getScope()));
+                }
+                killSet.add(new Dom(varName, null, node.getScope()));
+            }
+        }
+        System.out.println("kill set: " + killSet.toString());
         return killSet;
     }
 
@@ -71,25 +86,25 @@ public class Uninitialized_Variable_Analysis extends Analysis {
         {
             IRcommand_Binop binopCommand = (IRcommand_Binop) command;
             if(this.isLabelNull(inSet, "t" + binopCommand.t1.getSerialNumber()) || (this.isLabelNull(inSet, "t" + binopCommand.t2.getSerialNumber()))) {
-                genSet.add(new Dom("t" + binopCommand.dst.getSerialNumber(), null));
+                genSet.add(new Dom("t" + binopCommand.dst.getSerialNumber(), null, node.getScope()));
             } else {
-                genSet.add(new Dom("t" + binopCommand.dst.getSerialNumber(), node.getIndex()));
+                genSet.add(new Dom("t" + binopCommand.dst.getSerialNumber(), node.getIndex(), node.getScope()));
             }
         }
 
         if (command instanceof IRcommandConstInt) {
             IRcommandConstInt constIntCommand = (IRcommandConstInt) command;
-            genSet.add(new Dom("t" + constIntCommand.t.getSerialNumber(), node.getIndex()));
+            genSet.add(new Dom("t" + constIntCommand.t.getSerialNumber(), node.getIndex(), node.getScope()));
         }
         
         if (command instanceof IRcommand_Load) {
             IRcommand_Load loadCommand = (IRcommand_Load) command;
             // might want to modify based on scope
             if(this.isLabelNull(inSet, loadCommand.var_name)) {
-                genSet.add(new Dom("t" + loadCommand.dst.getSerialNumber(), null));
+                genSet.add(new Dom("t" + loadCommand.dst.getSerialNumber(), null, node.getScope()));
             }
             else {
-                genSet.add(new Dom("t" + loadCommand.dst.getSerialNumber(), node.getIndex()));
+                genSet.add(new Dom("t" + loadCommand.dst.getSerialNumber(), node.getIndex(), node.getScope()));
             }
         }
 
@@ -97,19 +112,20 @@ public class Uninitialized_Variable_Analysis extends Analysis {
             IRcommand_Store storeCommand = (IRcommand_Store) command;
             // might want to modify based on scope
             if(this.isLabelNull(inSet, "t" + storeCommand.src.getSerialNumber())) {
-                genSet.add(new Dom(storeCommand.var_name, null));
+                genSet.add(new Dom(storeCommand.var_name, null, node.getScope()));
             }
             else {
-                genSet.add(new Dom(storeCommand.var_name, node.getIndex()));
+                genSet.add(new Dom(storeCommand.var_name, node.getIndex(), node.getScope()));
             }
         }
 
         if(command instanceof IRcommand_Allocate)
         {
             IRcommand_Allocate allocateCommand = (IRcommand_Allocate) command;
-            genSet.add(new Dom(allocateCommand.var_name, null));
+            genSet.add(new Dom(allocateCommand.var_name, null, node.getScope()));
         }
 
+        System.out.println("gen set: " + genSet.toString());
         return genSet;
     }
     
@@ -129,6 +145,7 @@ public class Uninitialized_Variable_Analysis extends Analysis {
             boolean found = inSet.stream().anyMatch(dom -> usedVar.equals(dom.getVarName()) && dom.getLabel() == null);
     
             if (found) {
+                System.out.println(usedVar + " inSet: " + inSet.toString());
                 foundVars.add(usedVar);
             }
         }
@@ -159,7 +176,7 @@ public class Uninitialized_Variable_Analysis extends Analysis {
         HashSet<Dom> initVal = new HashSet<>();
         Set<String> varNames = cfg.getVarNames();
         for (String varName : varNames) {
-            initVal.add(new Dom(varName, null));   
+            initVal.add(new Dom(varName, null, null));   
         }
 
         initialValue = initVal;
