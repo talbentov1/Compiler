@@ -34,7 +34,23 @@ public class Uninitialized_Variable_Analysis extends Analysis {
         if (command instanceof IRcommand_Load){
             // might want to modify based on scope
             IRcommand_Load loadCommand = (IRcommand_Load) command;
-            String tempName = loadCommand.dst;
+            String tempName = "t" + loadCommand.dst.serial;
+            for (int i=0; i<cfg.size(); i++) {
+                killSet.add(new Dom(tempName, i));
+            }
+            killSet.add(new Dom(tempName, null));
+        }
+
+        if(command instanceof IRcommand_Binop_Sub_Integers 
+            || command instanceof IRcommand_Binop_Add_Integers
+            || command instanceof IRcommand_Binop_Div_Integers
+            || command instanceof IRcommand_Binop_Mul_Integers
+            || command instanceof IRcommand_Binop_EQ_Integer
+            || command instanceof IRcommand_Binop_GT_Integers
+            || command instanceof IRcommand_Binop_LT_Integers
+        ) {
+            // might not work without casting, if so, we would need to seperate this if to 7 different if :(
+            String tempName = "t" + command.dst.serial;
             for (int i=0; i<cfg.size(); i++) {
                 killSet.add(new Dom(tempName, i));
             }
