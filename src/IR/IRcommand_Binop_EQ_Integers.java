@@ -12,16 +12,14 @@ package IR;
 /*******************/
 import TEMP.*;
 
-public class IRcommand_Binop_EQ_Integers extends IRcommand
+public class IRcommand_Binop_EQ_Integers extends IRcommand_Binop
 {
-	public TEMP t1;
-	public TEMP t2;
-	public TEMP dst;
-
 	public IRcommand_Binop_EQ_Integers(TEMP dst,TEMP t1,TEMP t2)
 	{
-		this.dst = dst;
-		this.t1 = t1;
-		this.t2 = t2;
+		super(dst,t1,t2);
+	}
+
+	public void printCommand() {
+		System.out.println("t" + dst.getSerialNumber() + " = " + "t" + t1.getSerialNumber() + " == t" + t2.getSerialNumber());
 	}
 }

@@ -3,8 +3,6 @@ package IR;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -34,23 +32,17 @@ public class Uninitialized_Variable_Analysis extends Analysis {
         if (command instanceof IRcommand_Load){
             // might want to modify based on scope
             IRcommand_Load loadCommand = (IRcommand_Load) command;
-            String tempName = "t" + loadCommand.dst.serial;
+            String tempName = "t" + loadCommand.dst.getSerialNumber();
             for (int i=0; i<cfg.size(); i++) {
                 killSet.add(new Dom(tempName, i));
             }
             killSet.add(new Dom(tempName, null));
         }
 
-        if(command instanceof IRcommand_Binop_Sub_Integers 
-            || command instanceof IRcommand_Binop_Add_Integers
-            || command instanceof IRcommand_Binop_Div_Integers
-            || command instanceof IRcommand_Binop_Mul_Integers
-            || command instanceof IRcommand_Binop_EQ_Integer
-            || command instanceof IRcommand_Binop_GT_Integers
-            || command instanceof IRcommand_Binop_LT_Integers
-        ) {
-            // might not work without casting, if so, we would need to seperate this if to 7 different if :(
-            String tempName = "t" + command.dst.serial;
+        if(command instanceof IRcommand_Binop)
+        {
+            IRcommand_Binop binopCommand = (IRcommand_Binop) command;
+            String tempName = "t" + binopCommand.dst.getSerialNumber();
             for (int i=0; i<cfg.size(); i++) {
                 killSet.add(new Dom(tempName, i));
             }
@@ -65,42 +57,36 @@ public class Uninitialized_Variable_Analysis extends Analysis {
         IRcommand command = node.getCommand();
         HashSet<Dom> inSet = node.getAnalysisIn();
 
-        if(command instanceof IRcommand_Binop_Sub_Integers 
-            || command instanceof IRcommand_Binop_Add_Integers
-            || command instanceof IRcommand_Binop_Div_Integers
-            || command instanceof IRcommand_Binop_Mul_Integers
-            || command instanceof IRcommand_Binop_EQ_Integer
-            || command instanceof IRcommand_Binop_GT_Integers
-            || command instanceof IRcommand_Binop_LT_Integers
-        ) {
-            // might not work without casting, if so, we would need to seperate this if to 7 different if :(
-            if(this.isLabelNull(inSet, "t" + command.t1.serial) || if(this.isLabelNull(inSet, "t" + command.t2.serial))) {
-                genSet.add(new Dom("t" + command.dst.serial, null));
+        if(command instanceof IRcommand_Binop)
+        {
+            IRcommand_Binop binopCommand = (IRcommand_Binop) command;
+            if(this.isLabelNull(inSet, "t" + binopCommand.t1.getSerialNumber()) || (this.isLabelNull(inSet, "t" + binopCommand.t2.getSerialNumber()))) {
+                genSet.add(new Dom("t" + binopCommand.dst.getSerialNumber(), null));
             } else {
-                genSet.add(new Dom("t" + command.dst.serial, node.getIndex()));
+                genSet.add(new Dom("t" + binopCommand.dst.getSerialNumber(), node.getIndex()));
             }
         }
 
         if (command instanceof IRcommandConstInt) {
             IRcommandConstInt constIntCommand = (IRcommandConstInt) command;
-            genSet.add(new Dom("t" + constIntCommand.t.serial, node.getIndex()));
+            genSet.add(new Dom("t" + constIntCommand.t.getSerialNumber(), node.getIndex()));
         }
         
-        if (command instanceof IRcommand_load) {
-            IRcommand_load loadCommand = (IRcommand_load) command;
+        if (command instanceof IRcommand_Load) {
+            IRcommand_Load loadCommand = (IRcommand_Load) command;
             // might want to modify based on scope
             if(this.isLabelNull(inSet, loadCommand.var_name)) {
-                genSet.add(new Dom("t" + loadCommand.dst.serial, null));
+                genSet.add(new Dom("t" + loadCommand.dst.getSerialNumber(), null));
             }
             else {
-                genSet.add(new Dom("t" + loadCommand.dst.serial, node.getIndex()));
+                genSet.add(new Dom("t" + loadCommand.dst.getSerialNumber(), node.getIndex()));
             }
         }
 
         if (command instanceof IRcommand_Store) {
             IRcommand_Store storeCommand = (IRcommand_Store) command;
             // might want to modify based on scope
-            if(this.isLabelNull(inSet, "t" + storeCommand.src.serial)) {
+            if(this.isLabelNull(inSet, "t" + storeCommand.src.getSerialNumber())) {
                 genSet.add(new Dom(storeCommand.var_name, null));
             }
             else {
@@ -170,4 +156,5 @@ public class Uninitialized_Variable_Analysis extends Analysis {
                 .map(dom -> dom.getLabel() == null)
                 .orElse(false);
     }
+
 }
