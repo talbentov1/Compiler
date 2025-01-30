@@ -48,6 +48,16 @@ public class Uninitialized_Variable_Analysis extends Analysis {
             }
             killSet.add(new Dom(tempName, null));
         }
+
+        if(command instanceof IRcommand_Allocate)
+        {
+            IRcommand_Allocate allocateCommand = (IRcommand_Allocate) command;
+            String varName = allocateCommand.var_name;
+            for (int i=0; i<cfg.size(); i++) {
+                killSet.add(new Dom(varName, i));
+            }
+            killSet.add(new Dom(varName, null));
+        }
         return killSet;
     }
 
@@ -92,6 +102,12 @@ public class Uninitialized_Variable_Analysis extends Analysis {
             else {
                 genSet.add(new Dom(storeCommand.var_name, node.getIndex()));
             }
+        }
+
+        if(command instanceof IRcommand_Allocate)
+        {
+            IRcommand_Allocate allocateCommand = (IRcommand_Allocate) command;
+            genSet.add(new Dom(allocateCommand.var_name, null));
         }
 
         return genSet;

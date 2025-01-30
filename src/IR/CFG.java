@@ -11,15 +11,17 @@ import java.util.TreeSet;
 public class CFG {
     private int scope;
     private ArrayList<CFG_Node> nodes;
-    private ArrayList<CFG_Edge> edges;
     private Set<String> varNames;
+    private HashMap<String, CFG_Node> labelToNodeMap;
+    private HashMap<CFG_Node, String> pendingJumps;
 
     private static CFG CFG_instance = null;
 
     private CFG() {
         nodes = new ArrayList<>();
-        edges = new ArrayList<>();
         varNames = new TreeSet<>();
+        labelToNodeMap = new HashMap<>();
+        pendingJumps = new HashMap<>();
         scope = 0;
     }
 
@@ -35,44 +37,53 @@ public class CFG {
         for (CFG_Node node : nodes) {
             node.printNodeCommands(); // need to implement
         }
-        for (CFG_Edge edge : edges) {
-            System.out.println(edge.toString());
-        }
     }
 
     public void buildCFG() {
         nodes.clear();
-        edges.clear();
-
-        HashMap<String, CFG_Node> labelToNodeMap = new HashMap<>();
-        HashMap<CFG_Node, String> pendingJumps = new HashMap<>();
 
         // Iterate through the command list and create nodes
+        bldGlobalsAndThenMain();
+
+        // Connect nodes
+       bldConnections();
+    }
+
+    public void bldNode(IRcommand current){
+        CFG_Node currentNode = new CFG_Node(current, scope);
+        nodes.add(currentNode);
+
+        if (current instanceof IRcommand_Label) {
+            IRcommand_Label labelCommand = (IRcommand_Label) current;
+            labelToNodeMap.put(labelCommand.label_name, currentNode);
+        }
+
+        if (current instanceof IRcommand_Jump_If_Eq_To_Zero || current instanceof IRcommand_Jump_Label) {
+            String targetLabel;
+            if (current instanceof IRcommand_Jump_If_Eq_To_Zero) {
+                targetLabel = ((IRcommand_Jump_If_Eq_To_Zero) current).label_name;
+            } else {
+                targetLabel = ((IRcommand_Jump_Label) current).label_name;
+            }
+            pendingJumps.put(currentNode, targetLabel);
+        }
+
+        addVarNames(current);
+    }
+
+    public void bldGlobalsAndThenMain(){
+        int first = -1;
+        int last = -1;
+        int i = 0;
         IRcommand current = IR.getInstance().get_head();
         IRcommandList next = IR.getInstance().get_tail();
-        
+
+        // build the global scope first
         while (current != null) {
-            CFG_Node currentNode = new CFG_Node(current, scope);
-            nodes.add(currentNode);
-
+            if (this.scope == 0){
+                bldNode(current);
+            }
             advanceScope(current);
-
-            if (current instanceof IRcommand_Label) {
-                IRcommand_Label labelCommand = (IRcommand_Label) current;
-                labelToNodeMap.put(labelCommand.label_name, currentNode);
-            }
-
-            if (current instanceof IRcommand_Jump_If_Eq_To_Zero || current instanceof IRcommand_Jump_Label) {
-                String targetLabel;
-                if (current instanceof IRcommand_Jump_If_Eq_To_Zero) {
-                    targetLabel = ((IRcommand_Jump_If_Eq_To_Zero) current).label_name;
-                } else {
-                    targetLabel = ((IRcommand_Jump_Label) current).label_name;
-                }
-                pendingJumps.put(currentNode, targetLabel);
-            }
-
-            addVarNames(current);
 
             if (next != null){
                 current = next.get_head();
@@ -84,7 +95,30 @@ public class CFG {
             }
         }
 
-        // Connect nodes with edges
+        this.scope = 0;
+        current = IR.getInstance().get_head();
+        next = IR.getInstance().get_tail();
+
+        // build main
+        while (current != null) {
+            if (this.scope > 0){
+                bldNode(current);
+            }
+            advanceScope(current);
+
+            if (next != null){
+                current = next.get_head();
+                next = next.get_tail();
+            }
+            else{
+                current = null;
+                next = null;
+            }
+        }
+
+    }
+
+    public void bldConnections(){
         for (int i = 0; i < nodes.size(); i++) {
             CFG_Node currentNode = nodes.get(i);
             IRcommand command = currentNode.getCommand();
@@ -93,7 +127,6 @@ public class CFG {
             if (!(command instanceof IRcommand_Jump_Label)) {
                 if (i + 1 < nodes.size()) {
                     CFG_Node nextNode = nodes.get(i + 1);
-                    edges.add(new CFG_Edge(currentNode, nextNode));
                     currentNode.addToOutNodes(nextNode);
                     nextNode.addToInNodes(currentNode);
                 }
@@ -104,7 +137,6 @@ public class CFG {
                 String targetLabel = pendingJumps.get(currentNode);
                 if (labelToNodeMap.containsKey(targetLabel)) {
                     CFG_Node targetNode = labelToNodeMap.get(targetLabel);
-                    edges.add(new CFG_Edge(currentNode, targetNode));
                     currentNode.addToOutNodes(targetNode);
                     targetNode.addToInNodes(currentNode);
                 } else {
@@ -137,10 +169,6 @@ public class CFG {
 
     public ArrayList<CFG_Node> getNodes(){
         return this.nodes;
-    }
-
-    public ArrayList<CFG_Edge> getEdges(){
-        return this.edges;
     }
 
     public int size(){
